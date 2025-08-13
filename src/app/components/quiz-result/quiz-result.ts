@@ -8,7 +8,7 @@ import { ResultadoQuizDTO } from '../../models';
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule    // ← necessário para usar router.navigate() no template
+    RouterModule
   ],
   templateUrl: './quiz-result.html'
 })
@@ -16,7 +16,7 @@ export class QuizResultComponent {
   resultado!: ResultadoQuizDTO;
 
   constructor(
-    public router: Router   // ← public, para o template conseguir acessar
+    public router: Router
   ) {
     const nav = this.router.getCurrentNavigation();
     this.resultado = nav?.extras.state?.['resultado'];

@@ -1,0 +1,42 @@
+<!-- quiz-list.component.html -->
+<div *ngFor="let p of perguntas; let i = index" class="question">
+  <!-- ...caso IMAGEM→TEXTO omitido para foco... -->
+
+  <!-- TEXTO → IMAGEM -->
+  <ng-container *ngSwitchCase="'TEXTO_PARA_IMAGEM'">
+    <!-- 1) Enunciado grande -->
+    <h3 class="prompt-text">{{ p.prompt[0] }}</h3>
+
+    <!-- 2) Opções gráficas -->
+    <div class="prompt-list">
+      <!-- percorre p.opcoes e mostra só imagemUrl -->
+      <img *ngFor="let opc of p.opcoes"
+           [src]="opc.imagemUrl"
+           alt="opção {{ opc.imagemUrl }}"
+           width="200" />
+    </div>
+  </ng-container>
+
+  <!-- lista de radio buttons continua igual -->
+  <ul class="options">
+    <li *ngFor="let opc of p.opcoes; let j = index">
+      <label>
+        <input
+          type="radio"
+          [name]="'q'+i"
+          [value]="j"
+          [(ngModel)]="respostas[i].opcaoEscolhida" />
+        <span *ngIf="opc.texto">{{ opc.texto }}</span>
+        <!-- removemos o img aqui, pois as alternativas já são imagens -->
+      </label>
+    </li>
+  </ul>
+</div>
+
+
+<button
+  class="submit-btn"
+  (click)="submit()"
+  [disabled]="!canSubmit">
+  Enviar
+</button>

@@ -1,4 +1,5 @@
 // src/app/services/quiz.service.ts
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -10,8 +11,8 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class QuizService {
-  // ← aqui
-  private baseUrl = 'http://localhost:8080/api/quiz';
+  // usa o proxy definido em proxy.conf.json
+  private baseUrl = '/api/quiz';
 
   constructor(private http: HttpClient) {}
 
@@ -26,4 +27,3 @@ export class QuizService {
     );
   }
 }
-

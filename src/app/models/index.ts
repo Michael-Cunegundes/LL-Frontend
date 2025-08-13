@@ -1,17 +1,15 @@
-// src/app/models/index.ts
-
 export type TipoPergunta = 'IMAGEM_PARA_TEXTO' | 'TEXTO_PARA_IMAGEM';
 
 export interface OptionDTO {
-  texto?: string;      // usado quando a opção é texto
-  imagemUrl?: string;  // usado quando a opção é imagem
+  texto?: string;      // quando a opção for texto
+  imagemUrl?: string;  // quando a opção for imagem
 }
 
 export interface PerguntaDTO {
   id: number;
   tipo: TipoPergunta;
-  prompt: string[];       // agora é um array
-  opcoes: OptionDTO[];
+  prompt: string[];       // sempre um array
+  opcoes: OptionDTO[];    // lista de opções
   indiceCorreto: number;
 }
 

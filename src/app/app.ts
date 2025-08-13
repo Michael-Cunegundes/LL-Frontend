@@ -1,6 +1,6 @@
-// src/app/app.ts
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { routes } from './app.routes';
 
 @Component({
   selector: 'app-root',
@@ -9,3 +9,14 @@ import { RouterOutlet } from '@angular/router';
   template: `<router-outlet></router-outlet>`
 })
 export class AppComponent {}
+
+
+@NgModule({
+  imports: [
+    BrowserModule,
+    RouterModule.forRoot(routes),
+    // ... outros imports
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
