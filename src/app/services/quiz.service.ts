@@ -4,20 +4,25 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
-  PerguntaDTO,
+  QuestaoDTO,
   RespostaQuizDTO,
   ResultadoQuizDTO
 } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class QuizService {
-  // usa o proxy definido em proxy.conf.json
   private baseUrl = '/api/quiz';
 
   constructor(private http: HttpClient) {}
 
-  getPerguntas(): Observable<PerguntaDTO[]> {
-    return this.http.get<PerguntaDTO[]>(`${this.baseUrl}/perguntas`);
+  // ✅ Corrigido: usar endpoint por nível
+  getQuestoesPorNivel(level: number): Observable<QuestaoDTO[]> {
+    return this.http.get<QuestaoDTO[]>(`${this.baseUrl}/levels/${level}/questions`);
+  }
+
+  // ✅ Manter endpoint geral para debug
+  getTodasPerguntas(): Observable<QuestaoDTO[]> {
+    return this.http.get<QuestaoDTO[]>(`${this.baseUrl}/perguntas`);
   }
 
   submitRespostas(respostas: RespostaQuizDTO[]): Observable<ResultadoQuizDTO> {

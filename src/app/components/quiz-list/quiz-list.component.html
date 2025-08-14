@@ -1,42 +1,95 @@
-<!-- quiz-list.component.html -->
-<div *ngFor="let p of perguntas; let i = index" class="question">
-  <!-- ...caso IMAGEM→TEXTO omitido para foco... -->
+<!-- src/app/components/quiz-list/quiz-list.component.html -->
+<div class="quiz-container">
+  <header class="quiz-header">
+    <h1>LibraLingo - Nível {{ level }}</h1>
+    <p>Responda às perguntas sobre LIBRAS:</p>
+  </header>
 
-  <!-- TEXTO → IMAGEM -->
-  <ng-container *ngSwitchCase="'TEXTO_PARA_IMAGEM'">
-    <!-- 1) Enunciado grande -->
-    <h3 class="prompt-text">{{ p.prompt[0] }}</h3>
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading">
+    <p>Carregando perguntas...</p>
+  </div>
 
-    <!-- 2) Opções gráficas -->
-    <div class="prompt-list">
-      <!-- percorre p.opcoes e mostra só imagemUrl -->
-      <img *ngFor="let opc of p.opcoes"
-           [src]="opc.imagemUrl"
-           alt="opção {{ opc.imagemUrl }}"
-           width="200" />
+  <!-- Erro -->
+  <div *ngIf="erro" class="error">
+    <p>{{ erro }}</p>
+    <button (click)="carregarPerguntas()" class="retry-btn">Tentar Novamente</button>
+  </div>
+
+  <!-- Quiz -->
+  <div *ngIf="!loading && !erro && perguntas.length > 0" class="quiz-content">
+    <div *ngFor="let pergunta of perguntas; let i = index"
+         class="question-card">
+
+      <div class="question-number">
+        Pergunta {{ i + 1 }} de {{ perguntas.length }}
+      </div>
+
+      <!-- Imagem para Texto -->
+      <div *ngIf="pergunta.tipo === 'IMAGEM_PARA_TEXTO'" class="img-to-text">
+        <div class="prompt-images">
+          <img *ngFor="let promptUrl of pergunta.prompt"
+               [src]="promptUrl"
+               alt="Sinal em Libras"
+               class="libras-image">
+        </div>
+
+        <div class="question-text">
+          <strong>Qual o significado deste sinal?</strong>
+        </div>
+
+        <div class="options">
+          <label *ngFor="let opcao of pergunta.opcoes; let j = index"
+                 class="option-label">
+            <input type="radio"
+                   [name]="'pergunta_' + i"
+                   [value]="j"
+                   [(ngModel)]="respostas[i].opcaoEscolhida">
+            <span class="option-text">{{ opcao.texto }}</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Texto para Imagem -->
+      <div *ngIf="pergunta.tipo === 'TEXTO_PARA_IMAGEM'" class="text-to-img">
+        <div class="question-text">
+          <strong>Qual imagem representa: "{{ pergunta.prompt[0] }}"?</strong>
+        </div>
+
+        <div class="image-options">
+          <label *ngFor="let opcao of pergunta.opcoes; let j = index"
+                 class="image-option">
+            <input type="radio"
+                   [name]="'pergunta_' + i"
+                   [value]="j"
+                   [(ngModel)]="respostas[i].opcaoEscolhida">
+            <img [src]="opcao.imagemUrl"
+                 alt="Opção {{ j + 1 }}"
+                 class="option-image">
+          </label>
+        </div>
+      </div>
     </div>
-  </ng-container>
 
-  <!-- lista de radio buttons continua igual -->
-  <ul class="options">
-    <li *ngFor="let opc of p.opcoes; let j = index">
-      <label>
-        <input
-          type="radio"
-          [name]="'q'+i"
-          [value]="j"
-          [(ngModel)]="respostas[i].opcaoEscolhida" />
-        <span *ngIf="opc.texto">{{ opc.texto }}</span>
-        <!-- removemos o img aqui, pois as alternativas já são imagens -->
-      </label>
-    </li>
-  </ul>
+    <!-- Botão Submit -->
+    <div class="submit-section">
+      <button class="submit-btn"
+              [disabled]="!canSubmit || loading"
+              (click)="submit()">
+        {{ loading ? 'Enviando...' : 'Enviar Respostas' }}
+      </button>
+
+      <div class="progress">
+        {{ getRespostasPreenchidas() }} / {{ respostas.length }} respondidas
+      </div>
+    </div>
+  </div>
+
+  <!-- Sem perguntas -->
+  <div *ngIf="!loading && !erro && perguntas.length === 0" class="no-questions">
+    <p>Nenhuma pergunta disponível para este nível.</p>
+    <button (click)="voltarNiveis()" class="back-btn">
+      Voltar aos Níveis
+    </button>
+  </div>
 </div>
-
-
-<button
-  class="submit-btn"
-  (click)="submit()"
-  [disabled]="!canSubmit">
-  Enviar
-</button>

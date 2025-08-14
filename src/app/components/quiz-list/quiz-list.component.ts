@@ -5,7 +5,7 @@ import { FormsModule }            from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { QuizService }            from '../../services/quiz.service';
 import {
-  PerguntaDTO,
+  QuestaoDTO,
   RespostaQuizDTO
 } from '../../models';
 
@@ -17,11 +17,11 @@ import {
   styleUrls: ['./quiz-list.component.scss']
 })
 export class QuizListComponent implements OnInit {
-  allPerguntas: PerguntaDTO[] = [];
-  perguntas: PerguntaDTO[] = [];
+  perguntas: QuestaoDTO[] = [];
   respostas: RespostaQuizDTO[] = [];
   level = 1;
-  readonly perguntasPorNivel = 5;
+  loading = false;
+  erro = '';
 
   constructor(
     private quiz: QuizService,
@@ -30,41 +30,70 @@ export class QuizListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // lê o ?level=X da URL e recarrega o quiz sempre que mudar
+    // ✅ Lê o nível da URL
     this.route.queryParams.subscribe(params => {
       this.level = +params['level'] || 1;
       this.carregarPerguntas();
     });
   }
 
-  private carregarPerguntas() {
-    this.quiz.getPerguntas().subscribe(list => {
-      this.allPerguntas = list;
-      // calcula início/fim do slice
-      const start = (this.level - 1) * this.perguntasPorNivel;
-      this.perguntas = this.allPerguntas.slice(
-        start,
-        start + this.perguntasPorNivel
-      );
-      // prepara array de respostas
-      this.respostas = this.perguntas.map(p => ({
-        perguntaId: p.id,
-        opcaoEscolhida: null
-      }));
+  carregarPerguntas() {
+    this.loading = true;
+    this.erro = '';
+
+    // ✅ Usar o endpoint correto por nível
+    this.quiz.getQuestoesPorNivel(this.level).subscribe({
+      next: (questoes) => {
+        this.perguntas = questoes;
+        // ✅ Prepara array de respostas
+        this.respostas = this.perguntas.map(p => ({
+          perguntaId: p.id,
+          opcaoEscolhida: null
+        }));
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Erro ao carregar perguntas:', err);
+        this.erro = 'Erro ao carregar perguntas. Tente novamente.';
+        this.loading = false;
+      }
     });
   }
 
   get canSubmit(): boolean {
-    return this.respostas.every(r => r.opcaoEscolhida != null);
+    return this.respostas.every(r => r.opcaoEscolhida !== null);
   }
 
   submit() {
-    this.quiz.submitRespostas(this.respostas)
-      .subscribe(res => {
+    if (!this.canSubmit) return;
+
+    this.loading = true;
+    this.quiz.submitRespostas(this.respostas).subscribe({
+      next: (resultado) => {
         this.router.navigate(
           ['/resultado'],
-          { state: { resultado: res } }
+          {
+            state: {
+              resultado,
+              level: this.level
+            }
+          }
         );
-      });
+      },
+      error: (err) => {
+        console.error('Erro ao enviar respostas:', err);
+        this.erro = 'Erro ao enviar respostas. Tente novamente.';
+        this.loading = false;
+      }
+    });
+  }
+
+  // ✅ Métodos públicos para o template
+  getRespostasPreenchidas(): number {
+    return this.respostas.filter(r => r.opcaoEscolhida !== null).length;
+  }
+
+  voltarNiveis(): void {
+    this.router.navigate(['']);
   }
 }

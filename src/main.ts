@@ -1,17 +1,16 @@
 // src/main.ts
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideRouter }        from '@angular/router';
-import { importProvidersFrom }  from '@angular/core';
-import { HttpClientModule }     from '@angular/common/http';
-
-import { AppComponent } from './app/app';
-import { routes }       from './app/app.routes';
+import { importProvidersFrom } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { routes } from './app/app.routes';
+import { AppComponent } from './app/app.component'; // ✅ Corrigido
 
 bootstrapApplication(AppComponent, {
   providers: [
-    importProvidersFrom(HttpClientModule),
-    provideRouter(routes)
+    importProvidersFrom(
+      RouterModule.forRoot(routes),
+      HttpClientModule
+    )
   ]
-});
-
-
+}).catch(err => console.error(err));
