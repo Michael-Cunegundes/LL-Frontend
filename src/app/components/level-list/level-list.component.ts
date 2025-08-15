@@ -8,78 +8,109 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <div class="level-container">
-      <header class="app-header">
-        <h1>LibraLingo</h1>
-        <p>Aprenda LIBRAS de forma interativa!</p>
-      </header>
+    <div class="main-container">
+      <!-- Lado Esquerdo - Níveis -->
+      <div class="levels-section">
+        <header class="app-header">
+          <h1>LibraLingo</h1>
+          <p class="subtitle">Escolha seu nível:</p>
+        </header>
 
-      <div class="levels-grid">
-        <div *ngFor="let nivel of niveis"
-             class="level-card"
-             [class.available]="nivel.disponivel"
-             [class.locked]="!nivel.disponivel">
+        <div class="levels-stack">
+          <div *ngFor="let nivel of niveis; let i = index"
+               class="level-item"
+               [class.available]="nivel.disponivel"
+               [class.locked]="!nivel.disponivel"
+               [style.z-index]="niveis.length - i">
 
-          <div class="level-icon">
-            <span *ngIf="nivel.disponivel">{{ nivel.emoji }}</span>
-            <span *ngIf="!nivel.disponivel">🔒</span>
+            <div class="level-content">
+              <div class="level-icon">
+                <span *ngIf="nivel.disponivel">{{ nivel.emoji }}</span>
+                <span *ngIf="!nivel.disponivel">🔒</span>
+              </div>
+
+              <div class="level-info">
+                <h3>Nível {{ nivel.numero }}</h3>
+                <p>{{ nivel.descricao }}</p>
+
+                <div class="level-stats" *ngIf="nivel.disponivel">
+                  <span class="questions-count">{{ nivel.totalPerguntas }} perguntas</span>
+                </div>
+              </div>
+
+              <div class="level-action">
+                <button
+                  class="start-btn"
+                  [disabled]="!nivel.disponivel"
+                  [routerLink]="['/quiz']"
+                  [queryParams]="{level: nivel.numero}"
+                  *ngIf="nivel.disponivel">
+                  Começar
+                </button>
+
+                <button
+                  class="locked-btn"
+                  disabled
+                  *ngIf="!nivel.disponivel">
+                  Bloqueado
+                </button>
+              </div>
+            </div>
           </div>
-
-          <h3>Nível {{ nivel.numero }}</h3>
-          <p>{{ nivel.descricao }}</p>
-
-          <div class="level-stats" *ngIf="nivel.disponivel">
-            <span class="questions-count">{{ nivel.totalPerguntas }} perguntas</span>
-          </div>
-
-          <button
-            class="start-btn"
-            [disabled]="!nivel.disponivel"
-            [routerLink]="['/quiz']"
-            [queryParams]="{level: nivel.numero}"
-            *ngIf="nivel.disponivel">
-            Começar
-          </button>
-
-          <button
-            class="locked-btn"
-            disabled
-            *ngIf="!nivel.disponivel">
-            Bloqueado
-          </button>
         </div>
       </div>
 
-      <div class="app-info">
-        <h2>Como funciona?</h2>
-        <div class="info-steps">
-          <div class="step">
-            <span class="step-number">1</span>
-            <p>Escolha um nível</p>
+      <!-- Lado Direito - Sinal/Logo -->
+      <div class="hero-section">
+        <div class="hero-content">
+          <div class="libras-demo">
+            <img src="https://via.placeholder.com/300x300/6B46C1/ffffff?text=APRENDER"
+                 alt="Sinal de Aprender em LIBRAS"
+                 class="libras-sign">
           </div>
-          <div class="step">
-            <span class="step-number">2</span>
-            <p>Responda às perguntas</p>
-          </div>
-          <div class="step">
-            <span class="step-number">3</span>
-            <p>Veja seu resultado</p>
+
+          <div class="hero-text">
+            <h2>Aprenda LIBRAS</h2>
+            <p>Descubra a linguagem de sinais brasileira de forma interativa e divertida.</p>
+
+            <div class="features">
+              <div class="feature">
+                <span class="feature-icon">🎯</span>
+                <span>Exercícios práticos</span>
+              </div>
+              <div class="feature">
+                <span class="feature-icon">📊</span>
+                <span>Acompanhe seu progresso</span>
+              </div>
+              <div class="feature">
+                <span class="feature-icon">🏆</span>
+                <span>Conquiste níveis</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   `,
   styles: [`
-    .level-container {
+    .main-container {
       min-height: 100vh;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      padding: 20px;
+      display: flex;
+    }
+
+    /* === LADO ESQUERDO - NÍVEIS === */
+    .levels-section {
+      flex: 1;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
     }
 
     .app-header {
-      text-align: center;
+      text-align: left;
       color: white;
-      margin-bottom: 50px;
+      margin-bottom: 40px;
     }
 
     .app-header h1 {
@@ -89,76 +120,91 @@ import { RouterModule } from '@angular/router';
       text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
 
-    .app-header p {
+    .subtitle {
       font-size: 1.2rem;
       opacity: 0.9;
+      margin: 0;
     }
 
-    .levels-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 30px;
-      max-width: 1200px;
-      margin: 0 auto 60px;
+    .levels-stack {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-width: 450px;
     }
 
-    .level-card {
+    .level-item {
       background: white;
       border-radius: 20px;
-      padding: 30px;
-      text-align: center;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      padding: 25px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
       transition: all 0.3s ease;
       position: relative;
     }
 
-    .level-card.available:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    .level-item.available:hover {
+      transform: translateX(10px) scale(1.02);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
     }
 
-    .level-card.locked {
+    .level-item.locked {
       opacity: 0.6;
       background: #f8f9fa;
     }
 
+    .level-content {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
     .level-icon {
-      font-size: 4rem;
-      margin-bottom: 20px;
+      font-size: 2.5rem;
+      min-width: 60px;
+      text-align: center;
     }
 
-    .level-card h3 {
+    .level-info {
+      flex: 1;
+    }
+
+    .level-info h3 {
       color: #374151;
-      margin-bottom: 10px;
-      font-size: 1.5rem;
+      margin: 0 0 8px 0;
+      font-size: 1.3rem;
     }
 
-    .level-card p {
+    .level-info p {
       color: #6B7280;
-      margin-bottom: 20px;
-      line-height: 1.5;
+      margin: 0 0 10px 0;
+      font-size: 0.9rem;
     }
 
     .level-stats {
       background: #F3F4F6;
-      padding: 10px;
-      border-radius: 10px;
-      margin-bottom: 20px;
+      padding: 5px 12px;
+      border-radius: 15px;
+      display: inline-block;
     }
 
     .questions-count {
       color: #374151;
       font-weight: 500;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
+    }
+
+    .level-action {
+      min-width: 100px;
     }
 
     .start-btn {
       background: #6B46C1;
       color: white;
       border: none;
-      padding: 12px 30px;
-      border-radius: 25px;
-      font-size: 1.1rem;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 0.9rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -174,57 +220,118 @@ import { RouterModule } from '@angular/router';
       background: #9CA3AF;
       color: white;
       border: none;
-      padding: 12px 30px;
-      border-radius: 25px;
-      font-size: 1.1rem;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 0.9rem;
       font-weight: 600;
       cursor: not-allowed;
       width: 100%;
     }
 
-    .app-info {
-      max-width: 800px;
-      margin: 0 auto;
+    /* === LADO DIREITO - HERO === */
+    .hero-section {
+      flex: 1;
+      padding: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-content {
       text-align: center;
       color: white;
+      max-width: 500px;
     }
 
-    .app-info h2 {
-      font-size: 2rem;
-      margin-bottom: 30px;
+    .libras-demo {
+      margin-bottom: 40px;
     }
 
-    .info-steps {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      flex-wrap: wrap;
+    .libras-sign {
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 6px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
     }
 
-    .step {
+    .libras-sign:hover {
+      transform: scale(1.05) rotate(5deg);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero-text h2 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .hero-text p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      opacity: 0.9;
+      margin-bottom: 40px;
+    }
+
+    .features {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      max-width: 200px;
+      gap: 20px;
+      align-items: flex-start;
     }
 
-    .step-number {
-      background: white;
-      color: #6B46C1;
-      width: 50px;
-      height: 50px;
+    .feature {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    .feature-icon {
+      font-size: 1.5rem;
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.2);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.5rem;
-      font-weight: bold;
-      margin-bottom: 15px;
     }
 
-    .step p {
-      margin: 0;
-      font-size: 1.1rem;
+    /* === RESPONSIVIDADE === */
+    @media (max-width: 1024px) {
+      .main-container {
+        flex-direction: column;
+      }
+
+      .levels-section {
+        padding: 30px 20px;
+      }
+
+      .hero-section {
+        padding: 20px;
+      }
+
+      .levels-stack {
+        max-width: 100%;
+      }
+
+      .libras-sign {
+        width: 200px;
+        height: 200px;
+      }
+
+      .hero-text h2 {
+        font-size: 2rem;
+      }
+
+      .features {
+        align-items: center;
+      }
     }
 
     @media (max-width: 768px) {
@@ -232,14 +339,20 @@ import { RouterModule } from '@angular/router';
         font-size: 2rem;
       }
 
-      .levels-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
+      .level-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
       }
 
-      .info-steps {
-        flex-direction: column;
-        gap: 20px;
+      .level-action {
+        min-width: auto;
+        width: 100%;
+      }
+
+      .libras-sign {
+        width: 150px;
+        height: 150px;
       }
     }
   `]
@@ -258,7 +371,7 @@ export class LevelListComponent {
       emoji: '🏠',
       descricao: 'Família e casa',
       totalPerguntas: 5,
-      disponivel: false // Será liberado após completar o nível 1
+      disponivel: false
     },
     {
       numero: 3,

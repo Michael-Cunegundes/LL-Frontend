@@ -1,94 +1,129 @@
 <!-- src/app/components/quiz-list/quiz-list.component.html -->
 <div class="quiz-container">
+  <!-- Header com progresso -->
   <header class="quiz-header">
-    <h1>LibraLingo - Nível {{ level }}</h1>
-    <p>Responda às perguntas sobre LIBRAS:</p>
+    <div class="header-content">
+      <button class="back-btn" (click)="voltarNiveis()">
+        <span>←</span> Voltar
+      </button>
+
+      <div class="progress-info">
+        <h1>LibraLingo - Nível {{ level }}</h1>
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="progress"></div>
+        </div>
+        <span class="progress-text">
+          {{ currentQuestionIndex + 1 }} de {{ perguntas.length }}
+        </span>
+      </div>
+    </div>
   </header>
 
   <!-- Loading -->
   <div *ngIf="loading" class="loading">
-    <p>Carregando perguntas...</p>
+    <div class="spinner"></div>
+    <p>{{ currentQuestionIndex === 0 ? 'Carregando perguntas...' : 'Enviando respostas...' }}</p>
   </div>
 
   <!-- Erro -->
   <div *ngIf="erro" class="error">
+    <div class="error-icon">⚠️</div>
     <p>{{ erro }}</p>
     <button (click)="carregarPerguntas()" class="retry-btn">Tentar Novamente</button>
   </div>
 
-  <!-- Quiz -->
-  <div *ngIf="!loading && !erro && perguntas.length > 0" class="quiz-content">
-    <div *ngFor="let pergunta of perguntas; let i = index"
-         class="question-card">
+  <!-- Quiz - Uma pergunta por vez -->
+  <div *ngIf="!loading && !erro && currentQuestion" class="quiz-content">
+    <div class="question-container">
 
-      <div class="question-number">
-        Pergunta {{ i + 1 }} de {{ perguntas.length }}
-      </div>
-
-      <!-- Imagem para Texto -->
-      <div *ngIf="pergunta.tipo === 'IMAGEM_PARA_TEXTO'" class="img-to-text">
-        <div class="prompt-images">
-          <img *ngFor="let promptUrl of pergunta.prompt"
+      <!-- Pergunta: Imagem para Texto -->
+      <div *ngIf="currentQuestion.tipo === 'IMAGEM_PARA_TEXTO'" class="question-card img-to-text">
+        <div class="question-images">
+          <img *ngFor="let promptUrl of currentQuestion.prompt"
                [src]="promptUrl"
                alt="Sinal em Libras"
                class="libras-image">
         </div>
 
         <div class="question-text">
-          <strong>Qual o significado deste sinal?</strong>
+          <h2>Qual o significado deste sinal?</h2>
         </div>
 
-        <div class="options">
-          <label *ngFor="let opcao of pergunta.opcoes; let j = index"
-                 class="option-label">
+        <div class="options-grid">
+          <label *ngFor="let opcao of currentQuestion.opcoes; let i = index"
+                 class="option-card"
+                 [class.selected]="selectedOption === i">
             <input type="radio"
-                   [name]="'pergunta_' + i"
-                   [value]="j"
-                   [(ngModel)]="respostas[i].opcaoEscolhida">
-            <span class="option-text">{{ opcao.texto }}</span>
+                   [name]="'question_' + currentQuestionIndex"
+                   [value]="i"
+                   [checked]="selectedOption === i"
+                   (change)="selectOption(i)">
+            <div class="option-content">
+              <span class="option-letter">{{ String.fromCharCode(65 + i) }}</span>
+              <span class="option-text">{{ opcao.texto }}</span>
+            </div>
           </label>
         </div>
       </div>
 
-      <!-- Texto para Imagem -->
-      <div *ngIf="pergunta.tipo === 'TEXTO_PARA_IMAGEM'" class="text-to-img">
+      <!-- Pergunta: Texto para Imagem -->
+      <div *ngIf="currentQuestion.tipo === 'TEXTO_PARA_IMAGEM'" class="question-card text-to-img">
         <div class="question-text">
-          <strong>Qual imagem representa: "{{ pergunta.prompt[0] }}"?</strong>
+          <h2>Qual imagem representa:</h2>
+          <div class="target-word">{{ currentQuestion.prompt[0] }}</div>
         </div>
 
-        <div class="image-options">
-          <label *ngFor="let opcao of pergunta.opcoes; let j = index"
-                 class="image-option">
+        <div class="image-options-grid">
+          <label *ngFor="let opcao of currentQuestion.opcoes; let i = index"
+                 class="image-option-card"
+                 [class.selected]="selectedOption === i">
             <input type="radio"
-                   [name]="'pergunta_' + i"
-                   [value]="j"
-                   [(ngModel)]="respostas[i].opcaoEscolhida">
-            <img [src]="opcao.imagemUrl"
-                 alt="Opção {{ j + 1 }}"
-                 class="option-image">
+                   [name]="'question_' + currentQuestionIndex"
+                   [value]="i"
+                   [checked]="selectedOption === i"
+                   (change)="selectOption(i)">
+            <div class="image-content">
+              <span class="option-letter">{{ String.fromCharCode(65 + i) }}</span>
+              <img [src]="opcao.imagemUrl"
+                   alt="Opção {{ String.fromCharCode(65 + i) }}"
+                   class="option-image">
+            </div>
           </label>
         </div>
-      </div>
-    </div>
-
-    <!-- Botão Submit -->
-    <div class="submit-section">
-      <button class="submit-btn"
-              [disabled]="!canSubmit || loading"
-              (click)="submit()">
-        {{ loading ? 'Enviando...' : 'Enviar Respostas' }}
-      </button>
-
-      <div class="progress">
-        {{ getRespostasPreenchidas() }} / {{ respostas.length }} respondidas
       </div>
     </div>
   </div>
 
+  <!-- Navegação -->
+  <div *ngIf="!loading && !erro && currentQuestion" class="navigation">
+    <button class="nav-btn secondary"
+            (click)="previousQuestion()"
+            [disabled]="currentQuestionIndex === 0">
+      ← Anterior
+    </button>
+
+    <div class="nav-center">
+      <div class="question-dots">
+        <span *ngFor="let pergunta of perguntas; let i = index"
+              class="dot"
+              [class.current]="i === currentQuestionIndex"
+              [class.answered]="respostas[i].opcaoEscolhida !== null">
+        </span>
+      </div>
+    </div>
+
+    <button class="nav-btn primary"
+            (click)="nextQuestion()"
+            [disabled]="!isAnswered">
+      {{ isLastQuestion ? 'Finalizar' : 'Próxima' }} →
+    </button>
+  </div>
+
   <!-- Sem perguntas -->
   <div *ngIf="!loading && !erro && perguntas.length === 0" class="no-questions">
+    <div class="empty-icon">📚</div>
     <p>Nenhuma pergunta disponível para este nível.</p>
-    <button (click)="voltarNiveis()" class="back-btn">
+    <button (click)="voltarNiveis()" class="retry-btn">
       Voltar aos Níveis
     </button>
   </div>
