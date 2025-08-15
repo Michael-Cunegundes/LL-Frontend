@@ -59,7 +59,7 @@
                    [checked]="selectedOption === i"
                    (change)="selectOption(i)">
             <div class="option-content">
-              <span class="option-letter">{{ String.fromCharCode(65 + i) }}</span>
+              <span class="option-letter">{{ getOptionLetter(i) }}</span>
               <span class="option-text">{{ opcao.texto }}</span>
             </div>
           </label>
@@ -83,9 +83,9 @@
                    [checked]="selectedOption === i"
                    (change)="selectOption(i)">
             <div class="image-content">
-              <span class="option-letter">{{ String.fromCharCode(65 + i) }}</span>
+              <span class="option-letter">{{ getOptionLetter(i) }}</span>
               <img [src]="opcao.imagemUrl"
-                   alt="Opção {{ String.fromCharCode(65 + i) }}"
+                   alt="Opção {{ getOptionLetter(i) }}"
                    class="option-image">
             </div>
           </label>

@@ -39,6 +39,11 @@ export class QuizListComponent implements OnInit {
     });
   }
 
+  // ✅ MÉTODO ADICIONADO para resolver o erro String.fromCharCode
+  getOptionLetter(index: number): string {
+    return String.fromCharCode(65 + index); // A, B, C, D...
+  }
+
   carregarPerguntas() {
     this.loading = true;
     this.erro = '';
