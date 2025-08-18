@@ -21,7 +21,8 @@ import { RouterModule } from '@angular/router';
                class="level-item"
                [class.available]="nivel.disponivel"
                [class.locked]="!nivel.disponivel"
-               [style.z-index]="niveis.length - i">
+               [style.z-index]="niveis.length - i"
+               [style.animation-delay]="(i * 0.1) + 's'">
 
             <div class="level-content">
               <div class="level-icon">
@@ -60,11 +61,10 @@ import { RouterModule } from '@angular/router';
         </div>
       </div>
 
-      <!-- Lado Direito - Sinal/Logo -->
+      <!-- Lado Direito - Hero Section -->
       <div class="hero-section">
         <div class="hero-content">
           <div class="libras-demo">
-            <!-- ✅ CORRIGIDO: Agora aponta para a imagem do backend -->
             <img src="/images/logo.png"
                  alt="Logo LibraLingo - Aprenda LIBRAS"
                  class="libras-sign"
@@ -73,12 +73,29 @@ import { RouterModule } from '@angular/router';
 
           <div class="hero-text">
             <h2>Aprenda Libras</h2>
-            <p>Aprender Libras (Língua Brasileira de Sinais) é essencial para promover a inclusão e a acessibilidade de pessoas surdas na sociedade. Ela permite uma comunicação mais justa, facilita o convívio em espaços públicos e garante o direito à expressão e à compreensão para quem tem a Libras como primeira língua.
-               Além disso, contribui para o desenvolvimento cognitivo, amplia a empatia e aproxima ouvintes da cultura surda. Em ambientes educacionais, melhora o aprendizado de alunos surdos, e no mercado de trabalho, abre oportunidades em áreas como saúde, educação, atendimento e serviços públicos.
-               Reconhecida por lei no Brasil, a Libras é uma ferramenta poderosa para construir uma sociedade mais inclusiva, justa e humana..</p>
+            <p class="intro-text">
+              Aprender Libras é essencial para promover inclusão e acessibilidade
+              na nossa sociedade.
+            </p>
 
-
-
+            <div class="benefits">
+              <div class="benefit">
+                <span class="benefit-icon">🤝</span>
+                <span>Comunicação mais justa e inclusiva</span>
+              </div>
+              <div class="benefit">
+                <span class="benefit-icon">🧠</span>
+                <span>Desenvolvimento cognitivo e empatia</span>
+              </div>
+              <div class="benefit">
+                <span class="benefit-icon">💼</span>
+                <span>Oportunidades no mercado de trabalho</span>
+              </div>
+              <div class="benefit">
+                <span class="benefit-icon">⚖️</span>
+                <span>Sociedade mais justa e humana</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -87,10 +104,21 @@ import { RouterModule } from '@angular/router';
   styles: [`
     .main-container {
       min-height: 100vh;
-//       background: var(--primary-gradient);
-      background: linear-gradient(135deg, #1a1aff 50%, #3d0099 100%);
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%);
       display: flex;
       width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Efeito sutil de grade no fundo */
+    .main-container::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><defs><pattern id='grid' width='40' height='40' patternUnits='userSpaceOnUse'><path d='M 40 0 L 0 0 0 40' fill='none' stroke='%233B82F6' stroke-width='0.5' opacity='0.1'/></pattern></defs><rect width='100%' height='100%' fill='url(%23grid)' /></svg>") repeat;
+      pointer-events: none;
     }
 
     /* === LADO ESQUERDO - NÍVEIS === */
@@ -99,53 +127,75 @@ import { RouterModule } from '@angular/router';
       padding: 40px;
       display: flex;
       flex-direction: column;
+      position: relative;
+      z-index: 1;
     }
 
     .app-header {
       text-align: left;
       color: white;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
 
     .app-header h1 {
       font-size: 7rem;
       margin-bottom: 10px;
-      font-weight: bold;
-      text-shadow: 10px 2px 4px rgba(0,0,0,0.3);
+      font-weight: 300;
+      text-shadow: none;
+      color: #FFFFFF;
+      letter-spacing: -2px;
     }
 
     .subtitle {
-      font-size: 1.5rem;
-      opacity: 0.9;
+      font-size: 1.4rem;
+      opacity: 0.8;
       margin: 0;
+      color: #CBD5E1;
+      font-weight: 300;
     }
 
     .levels-stack {
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 20px;        /* ✅ Aumentado de 15px para 20px para mais espaçamento */
-      max-width: 600px; /* ✅ Aumentado de 450px para 500px */
+      gap: 20px;
+      max-width: 600px;
     }
 
     .level-item {
-      background: #333333;
-      border-radius: 25px;
-      padding: 40px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
       transition: all 0.3s ease;
       position: relative;
-      min-height: 100px;  /* ✅ Altura mínima para deixar mais alto */
+      min-height: 100px;
+      border: 1px solid #F1F5F9;
+      animation: slideInLeft 0.6s ease-out;
+      animation-fill-mode: both;
+    }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .level-item.available:hover {
-      transform: translateX(10px) scale(1.02);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.15);
+      border-color: #3B82F6;
     }
 
     .level-item.locked {
       opacity: 0.6;
-      background: #f8f9fa;
+      background: #F8FAFC;
+      border-color: #E2E8F0;
     }
 
     .level-content {
@@ -165,64 +215,69 @@ import { RouterModule } from '@angular/router';
     }
 
     .level-info h3 {
-      color: #374151;
+      color: #1E293B;
       margin: 0 0 8px 0;
-      font-size: 1.3rem;
+      font-size: 1.4rem;
+      font-weight: 600;
     }
 
     .level-info p {
-      color: #6B7280;
-      margin: 0 0 10px 0;
-      font-size: 0.9rem;
+      color: #64748B;
+      margin: 0 0 12px 0;
+      font-size: 0.95rem;
+      line-height: 1.5;
     }
 
     .level-stats {
-      background: #F3F4F6;
-      padding: 5px 12px;
-      border-radius: 15px;
+      background: #EFF6FF;
+      padding: 6px 14px;
+      border-radius: 12px;
       display: inline-block;
+      border: 1px solid #DBEAFE;
     }
 
     .questions-count {
-      color: #374151;
+      color: #3B82F6;
       font-weight: 500;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
     }
 
     .level-action {
-      min-width: 120px;  /* ✅ Aumentado de 100px para 120px */
+      min-width: 120px;
     }
 
     .start-btn {
-      background: var(--primary-color);
-      color: black;
+      background: #3B82F6;
+      color: #FFFFFF;
       border: none;
-      padding: 15px 25px;  /* ✅ Aumentado de 10px 20px para 15px 25px */
-      border-radius: 25px;  /* ✅ Aumentado de 20px para 25px */
-      font-size: 1rem;     /* ✅ Aumentado de 0.9rem para 1rem */
-      font-weight: 600;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 500;
       cursor: pointer;
       transition: all 0.2s ease;
       width: 100%;
-      min-height: 50px;    /* ✅ Altura mínima do botão */
+      min-height: 48px;
+      letter-spacing: 0.3px;
     }
 
     .start-btn:hover:not(:disabled) {
-      background: var(--primary-hover);
+      background: #2563EB;
       transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
     }
 
     .locked-btn {
-      background: #9CA3AF;
-      color: white;
-      border: none;
-      padding: 15px 25px;  /* ✅ Aumentado de 10px 20px para 15px 25px */
-      border-radius: 25px;  /* ✅ Aumentado de 20px para 25px */
-      font-size: 1rem;     /* ✅ Aumentado de 0.9rem para 1rem */
-      font-weight: 600;
+      background: #F1F5F9;
+      color: #94A3B8;
+      border: 1px solid #E2E8F0;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 500;
       cursor: not-allowed;
       width: 100%;
-      min-height: 50px;    /* ✅ Altura mínima do botão */
+      min-height: 48px;
     }
 
     /* === LADO DIREITO - HERO === */
@@ -232,12 +287,14 @@ import { RouterModule } from '@angular/router';
       display: flex;
       align-items: center;
       justify-content: center;
+      position: relative;
+      z-index: 1;
     }
 
     .hero-content {
       text-align: center;
       color: white;
-      max-width: 5000px;
+      max-width: 500px;
     }
 
     .libras-demo {
@@ -247,24 +304,20 @@ import { RouterModule } from '@angular/router';
     .libras-sign {
       width: 250px;
       height: 250px;
-      border-radius: 60%;
-      object-fit: center;
-//       border: 6px solid rgba(255, 255, 255, 0.2);
-//       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-//       transition: all 1s ease;
-
-      /* ✅ Fallback caso a imagem não carregue */
+      border-radius: 50%;
+      object-fit: cover;
       background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
     }
 
-//     .libras-sign:hover {
-//       transform: scale(1.05) rotate(5deg);
-//       box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-//     }
+    .libras-sign:hover {
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: scale(1.02);
+    }
 
-    /* ✅ Estilo para quando a imagem falhar */
     .libras-sign.error {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.1);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -273,43 +326,53 @@ import { RouterModule } from '@angular/router';
     }
 
     .hero-text h2 {
-      font-size: 3rem;
-      margin-bottom: 20px;
-      font-weight: bold;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      font-size: 2.8rem;
+      margin-bottom: 24px;
+      font-weight: 300;
+      color: #FFFFFF;
+      letter-spacing: -1px;
     }
 
-    .hero-text p {
+    .intro-text {
       font-size: 1.2rem;
-      line-height: 1.8;
-      opacity: 1;
-      margin-bottom: 40px;
+      line-height: 1.7;
+      opacity: 0.9;
+      margin-bottom: 32px;
+      text-align: center;
+      color: #CBD5E1;
+      font-weight: 300;
     }
 
-    .features {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      align-items: flex-start;
-    }
-
-    .feature {
-      display: flex;
-      align-items: center;
+    .benefits {
+      display: grid;
       gap: 15px;
-      font-size: 1.1rem;
-      font-weight: 500;
+      text-align: left;
     }
 
-    .feature-icon {
-      font-size: 1.5rem;
-      width: 40px;
-      height: 40px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 50%;
+    .benefit {
       display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 16px;
+      padding: 16px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .benefit:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateX(4px);
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+
+    .benefit-icon {
+      font-size: 1.4rem;
+      width: 32px;
+      text-align: center;
+      flex-shrink: 0;
+      opacity: 0.9;
     }
 
     /* === RESPONSIVIDADE === */
@@ -336,16 +399,20 @@ import { RouterModule } from '@angular/router';
       }
 
       .hero-text h2 {
-        font-size: 2rem;
+        font-size: 2.5rem;
       }
 
-      .features {
-        align-items: center;
+      .app-header h1 {
+        font-size: 4rem;
       }
     }
 
     @media (max-width: 768px) {
       .app-header h1 {
+        font-size: 3rem;
+      }
+
+      .hero-text h2 {
         font-size: 2rem;
       }
 
@@ -361,8 +428,17 @@ import { RouterModule } from '@angular/router';
       }
 
       .libras-sign {
-        width: 150px;
-        height: 150px;
+        width: 180px;
+        height: 180px;
+      }
+
+      .benefits {
+        gap: 12px;
+      }
+
+      .benefit {
+        padding: 10px 14px;
+        font-size: 0.9rem;
       }
     }
   `]
@@ -399,7 +475,7 @@ export class LevelListComponent {
     }
   ];
 
-  // ✅ Método para lidar com erro de carregamento da imagem
+  // Método para lidar com erro de carregamento da imagem
   onImageError(event: Event) {
     const img = event.target as HTMLImageElement;
     img.classList.add('error');
