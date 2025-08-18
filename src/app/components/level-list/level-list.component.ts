@@ -104,7 +104,7 @@ import { RouterModule } from '@angular/router';
 
     /* === LADO ESQUERDO - NÍVEIS === */
     .levels-section {
-      flex: 1;
+      flex: 2;
       padding: 40px;
       display: flex;
       flex-direction: column;
@@ -113,11 +113,11 @@ import { RouterModule } from '@angular/router';
     .app-header {
       text-align: left;
       color: white;
-      margin-bottom: 40px;
+      margin-bottom: 20px;
     }
 
     .app-header h1 {
-      font-size: 3rem;
+      font-size: 5rem;
       margin-bottom: 10px;
       font-weight: bold;
       text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
@@ -133,17 +133,18 @@ import { RouterModule } from '@angular/router';
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 15px;
-      max-width: 450px;
+      gap: 20px;        /* ✅ Aumentado de 15px para 20px para mais espaçamento */
+      max-width: 500px; /* ✅ Aumentado de 450px para 500px */
     }
 
     .level-item {
       background: white;
       border-radius: 20px;
-      padding: 25px;
+      padding: 35px;  /* ✅ Aumentado de 25px para 35px */
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
       transition: all 0.3s ease;
       position: relative;
+      min-height: 120px;  /* ✅ Altura mínima para deixar mais alto */
     }
 
     .level-item.available:hover {
@@ -198,20 +199,21 @@ import { RouterModule } from '@angular/router';
     }
 
     .level-action {
-      min-width: 100px;
+      min-width: 120px;  /* ✅ Aumentado de 100px para 120px */
     }
 
     .start-btn {
       background: var(--primary-color);
       color: white;
       border: none;
-      padding: 10px 20px;
-      border-radius: 20px;
-      font-size: 0.9rem;
+      padding: 15px 25px;  /* ✅ Aumentado de 10px 20px para 15px 25px */
+      border-radius: 25px;  /* ✅ Aumentado de 20px para 25px */
+      font-size: 1rem;     /* ✅ Aumentado de 0.9rem para 1rem */
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
       width: 100%;
+      min-height: 50px;    /* ✅ Altura mínima do botão */
     }
 
     .start-btn:hover:not(:disabled) {
@@ -223,12 +225,13 @@ import { RouterModule } from '@angular/router';
       background: #9CA3AF;
       color: white;
       border: none;
-      padding: 10px 20px;
-      border-radius: 20px;
-      font-size: 0.9rem;
+      padding: 15px 25px;  /* ✅ Aumentado de 10px 20px para 15px 25px */
+      border-radius: 25px;  /* ✅ Aumentado de 20px para 25px */
+      font-size: 1rem;     /* ✅ Aumentado de 0.9rem para 1rem */
       font-weight: 600;
       cursor: not-allowed;
       width: 100%;
+      min-height: 50px;    /* ✅ Altura mínima do botão */
     }
 
     /* === LADO DIREITO - HERO === */
