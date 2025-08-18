@@ -72,23 +72,13 @@ import { RouterModule } from '@angular/router';
           </div>
 
           <div class="hero-text">
-            <h2>Aprenda LIBRAS</h2>
-            <p>Descubra a linguagem de sinais brasileira de forma interativa e divertida.</p>
+            <h2>Aprenda Libras</h2>
+            <p>Aprender Libras (Língua Brasileira de Sinais) é essencial para promover a inclusão e a acessibilidade de pessoas surdas na sociedade. Ela permite uma comunicação mais justa, facilita o convívio em espaços públicos e garante o direito à expressão e à compreensão para quem tem a Libras como primeira língua.
+               Além disso, contribui para o desenvolvimento cognitivo, amplia a empatia e aproxima ouvintes da cultura surda. Em ambientes educacionais, melhora o aprendizado de alunos surdos, e no mercado de trabalho, abre oportunidades em áreas como saúde, educação, atendimento e serviços públicos.
+               Reconhecida por lei no Brasil, a Libras é uma ferramenta poderosa para construir uma sociedade mais inclusiva, justa e humana..</p>
 
-            <div class="features">
-              <div class="feature">
-                <span class="feature-icon">🎯</span>
-                <span>Exercícios práticos</span>
-              </div>
-              <div class="feature">
-                <span class="feature-icon">📊</span>
-                <span>Acompanhe seu progresso</span>
-              </div>
-              <div class="feature">
-                <span class="feature-icon">🏆</span>
-                <span>Conquiste níveis</span>
-              </div>
-            </div>
+
+
           </div>
         </div>
       </div>
@@ -97,14 +87,15 @@ import { RouterModule } from '@angular/router';
   styles: [`
     .main-container {
       min-height: 100vh;
-      background: var(--primary-gradient);
+//       background: var(--primary-gradient);
+      background: linear-gradient(135deg, #1a1aff 50%, #3d0099 100%);
       display: flex;
       width: 100%;
     }
 
     /* === LADO ESQUERDO - NÍVEIS === */
     .levels-section {
-      flex: 2;
+      flex: 1.4;
       padding: 40px;
       display: flex;
       flex-direction: column;
@@ -113,18 +104,18 @@ import { RouterModule } from '@angular/router';
     .app-header {
       text-align: left;
       color: white;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
 
     .app-header h1 {
-      font-size: 5rem;
+      font-size: 7rem;
       margin-bottom: 10px;
       font-weight: bold;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      text-shadow: 10px 2px 4px rgba(0,0,0,0.3);
     }
 
     .subtitle {
-      font-size: 1.2rem;
+      font-size: 1.5rem;
       opacity: 0.9;
       margin: 0;
     }
@@ -134,17 +125,17 @@ import { RouterModule } from '@angular/router';
       display: flex;
       flex-direction: column;
       gap: 20px;        /* ✅ Aumentado de 15px para 20px para mais espaçamento */
-      max-width: 500px; /* ✅ Aumentado de 450px para 500px */
+      max-width: 600px; /* ✅ Aumentado de 450px para 500px */
     }
 
     .level-item {
-      background: white;
-      border-radius: 20px;
-      padding: 35px;  /* ✅ Aumentado de 25px para 35px */
+      background: #333333;
+      border-radius: 25px;
+      padding: 40px;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
       transition: all 0.3s ease;
       position: relative;
-      min-height: 120px;  /* ✅ Altura mínima para deixar mais alto */
+      min-height: 100px;  /* ✅ Altura mínima para deixar mais alto */
     }
 
     .level-item.available:hover {
@@ -204,7 +195,7 @@ import { RouterModule } from '@angular/router';
 
     .start-btn {
       background: var(--primary-color);
-      color: white;
+      color: black;
       border: none;
       padding: 15px 25px;  /* ✅ Aumentado de 10px 20px para 15px 25px */
       border-radius: 25px;  /* ✅ Aumentado de 20px para 25px */
@@ -236,7 +227,7 @@ import { RouterModule } from '@angular/router';
 
     /* === LADO DIREITO - HERO === */
     .hero-section {
-      flex: 1;
+      flex: 0.7;
       padding: 40px;
       display: flex;
       align-items: center;
@@ -246,7 +237,7 @@ import { RouterModule } from '@angular/router';
     .hero-content {
       text-align: center;
       color: white;
-      max-width: 500px;
+      max-width: 5000px;
     }
 
     .libras-demo {
@@ -256,20 +247,20 @@ import { RouterModule } from '@angular/router';
     .libras-sign {
       width: 250px;
       height: 250px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 6px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-      transition: all 0.3s ease;
+      border-radius: 60%;
+      object-fit: center;
+//       border: 6px solid rgba(255, 255, 255, 0.2);
+//       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+//       transition: all 1s ease;
 
       /* ✅ Fallback caso a imagem não carregue */
       background: rgba(255, 255, 255, 0.1);
     }
 
-    .libras-sign:hover {
-      transform: scale(1.05) rotate(5deg);
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-    }
+//     .libras-sign:hover {
+//       transform: scale(1.05) rotate(5deg);
+//       box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+//     }
 
     /* ✅ Estilo para quando a imagem falhar */
     .libras-sign.error {
@@ -282,7 +273,7 @@ import { RouterModule } from '@angular/router';
     }
 
     .hero-text h2 {
-      font-size: 2.5rem;
+      font-size: 3rem;
       margin-bottom: 20px;
       font-weight: bold;
       text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
@@ -290,8 +281,8 @@ import { RouterModule } from '@angular/router';
 
     .hero-text p {
       font-size: 1.2rem;
-      line-height: 1.6;
-      opacity: 0.9;
+      line-height: 1.8;
+      opacity: 1;
       margin-bottom: 40px;
     }
 
