@@ -64,9 +64,11 @@ import { RouterModule } from '@angular/router';
       <div class="hero-section">
         <div class="hero-content">
           <div class="libras-demo">
-            <img src="https://via.placeholder.com/300x300/6B46C1/ffffff?text=APRENDER"
-                 alt="Sinal de Aprender em LIBRAS"
-                 class="libras-sign">
+            <!-- ✅ CORRIGIDO: Agora aponta para a imagem do backend -->
+            <img src="/images/logo.png"
+                 alt="Logo LibraLingo - Aprenda LIBRAS"
+                 class="libras-sign"
+                 (error)="onImageError($event)">
           </div>
 
           <div class="hero-text">
@@ -95,8 +97,9 @@ import { RouterModule } from '@angular/router';
   styles: [`
     .main-container {
       min-height: 100vh;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: var(--primary-gradient);
       display: flex;
+      width: 100%;
     }
 
     /* === LADO ESQUERDO - NÍVEIS === */
@@ -199,7 +202,7 @@ import { RouterModule } from '@angular/router';
     }
 
     .start-btn {
-      background: #6B46C1;
+      background: var(--primary-color);
       color: white;
       border: none;
       padding: 10px 20px;
@@ -212,7 +215,7 @@ import { RouterModule } from '@angular/router';
     }
 
     .start-btn:hover:not(:disabled) {
-      background: #553C9A;
+      background: var(--primary-hover);
       transform: translateY(-1px);
     }
 
@@ -255,11 +258,24 @@ import { RouterModule } from '@angular/router';
       border: 6px solid rgba(255, 255, 255, 0.2);
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
       transition: all 0.3s ease;
+
+      /* ✅ Fallback caso a imagem não carregue */
+      background: rgba(255, 255, 255, 0.1);
     }
 
     .libras-sign:hover {
       transform: scale(1.05) rotate(5deg);
       box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    }
+
+    /* ✅ Estilo para quando a imagem falhar */
+    .libras-sign.error {
+      background: rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: white;
     }
 
     .hero-text h2 {
@@ -388,4 +404,12 @@ export class LevelListComponent {
       disponivel: false
     }
   ];
+
+  // ✅ Método para lidar com erro de carregamento da imagem
+  onImageError(event: Event) {
+    const img = event.target as HTMLImageElement;
+    img.classList.add('error');
+    img.innerHTML = '🤟'; // Emoji de mão em LIBRAS como fallback
+    console.warn('Imagem do logo não pôde ser carregada. Verifique se existe em /assets/images/logo.png no backend');
+  }
 }
