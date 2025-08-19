@@ -99,6 +99,17 @@ import { RouterModule } from '@angular/router';
           </div>
         </div>
       </div>
+
+      <!-- Disclaimer -->
+      <div class="disclaimer">
+        <div class="disclaimer-content">
+
+          <div class="disclaimer-text">
+            <strong></strong> Projeto educacional desenvolvido por não fluente em LIBRAS.
+            Para aprendizado profissional, consulte instrutores certificados.
+          </div>
+        </div>
+      </div>
     </div>
   `,
   styles: [`
@@ -373,6 +384,68 @@ import { RouterModule } from '@angular/router';
       text-align: center;
       flex-shrink: 0;
       opacity: 0.9;
+    }
+
+    /* === DISCLAIMER === */
+    .disclaimer {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      max-width: 300px;
+      z-index: 1000;
+      animation: slideInLeft 1s ease-out 2s both;
+    }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .disclaimer-content {
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 12px;
+      padding: 14px 16px;
+      color: #CBD5E1;
+      font-size: 0.8rem;
+      line-height: 1.4;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .disclaimer-icon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .disclaimer-text strong {
+      color: #3B82F6;
+      font-weight: 600;
+    }
+
+    /* Responsividade do disclaimer */
+    @media (max-width: 768px) {
+      .disclaimer {
+        bottom: 15px;
+        left: 15px;
+        right: 15px;
+        max-width: none;
+      }
+
+      .disclaimer-content {
+        font-size: 0.75rem;
+        padding: 12px 14px;
+      }
     }
 
     /* === RESPONSIVIDADE === */
