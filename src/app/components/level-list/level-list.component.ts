@@ -60,6 +60,44 @@ import { RouterModule } from '@angular/router';
         </div>
       </div>
 
+      <!-- Seção Central - Por que aprender LIBRAS? -->
+      <div class="central-section">
+        <div class="central-content">
+          <div class="section-header">
+            <h2>Por que aprender LIBRAS?</h2>
+            <p>Descubra a importância da Língua Brasileira de Sinais</p>
+          </div>
+
+          <div class="info-cards">
+            <div class="info-card"
+                 *ngFor="let info of informacoes; let i = index"
+                 [style.animation-delay]="(i * 0.2) + 's'">
+              <div class="info-icon">
+                <span>{{ info.icone }}</span>
+              </div>
+              <div class="info-content">
+                <h3>{{ info.titulo }}</h3>
+                <p>{{ info.descricao }}</p>
+                <div class="info-stat" *ngIf="info.estatistica">
+                  <span class="stat-number">{{ info.estatistica.numero }}</span>
+                  <span class="stat-label">{{ info.estatistica.label }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="quick-facts">
+            <h3>Você sabia?</h3>
+            <div class="facts-grid">
+              <div class="fact-item" *ngFor="let fato of fatos; let i = index">
+                <span class="fact-icon">{{ fato.icone }}</span>
+                <span class="fact-text">{{ fato.texto }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Lado Direito - Hero Section -->
       <div class="hero-section">
         <div class="hero-content">
@@ -113,7 +151,7 @@ import { RouterModule } from '@angular/router';
   styles: [`
     .main-container {
       min-height: 100vh;
-      background: #1a202c;  /* ✅ Fundo escuro similar à imagem */
+      background: #1a202c;
       display: flex;
       width: 100%;
       position: relative;
@@ -122,7 +160,7 @@ import { RouterModule } from '@angular/router';
 
     /* === LADO ESQUERDO - NÍVEIS === */
     .levels-section {
-      flex: 1.4;
+      flex: 1;
       padding: 40px;
       display: flex;
       flex-direction: column;
@@ -137,11 +175,12 @@ import { RouterModule } from '@angular/router';
     }
 
     .app-header h1 {
-      font-size: 7rem;
-      margin-bottom: 15px;
-      font-weight: 400;
+      font-size: 4rem;
+      margin-bottom: 10px;
+      font-weight: 300;
+      text-shadow: none;
       color: #FFFFFF;
-      letter-spacing: -1px;
+      letter-spacing: -2px;
     }
 
     .subtitle {
@@ -161,13 +200,14 @@ import { RouterModule } from '@angular/router';
     }
 
     .level-item {
-      background: #2d3748;
-      border-radius: 10px;
-      padding: 15px;
-      transition: all 0.5s ease;
-      min-height: 50px;
-      border: 1px solid #black;
-      animation: slideInLeft 0.5s ease-out;
+      background: #2d3748;  /* ✅ Cards com fundo escuro */
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.3s ease;
+      position: relative;
+      min-height: 80px;
+      border: 1px solid #4a5568;  /* ✅ Borda sutil */
+      animation: slideInLeft 0.6s ease-out;
       animation-fill-mode: both;
     }
 
@@ -243,17 +283,17 @@ import { RouterModule } from '@angular/router';
     }
 
     .start-btn {
-      background: #3182ce;
-      color: #000000;
-      border: 10px;
-      padding: 12px 50px;
-      border-radius: 10px;
-      font-size: 1rem;
+      background: #3182ce;  /* ✅ Azul similar à imagem */
+      color: #FFFFFF;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
       font-weight: 500;
       cursor: pointer;
-      transition: all 0.5s ease;
+      transition: all 0.2s ease;
       width: 100%;
-      min-height: 50px;
+      min-height: 40px;
     }
 
     .start-btn:hover:not(:disabled) {
@@ -272,6 +312,164 @@ import { RouterModule } from '@angular/router';
       cursor: not-allowed;
       width: 100%;
       min-height: 40px;
+    }
+
+    /* === SEÇÃO CENTRAL - POR QUE APRENDER LIBRAS === */
+    .central-section {
+      flex: 1.2;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .central-content {
+      max-width: 500px;
+      margin: 0 auto;
+      color: white;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .section-header h2 {
+      font-size: 2rem;
+      font-weight: 300;
+      margin-bottom: 8px;
+      color: #FFFFFF;
+    }
+
+    .section-header p {
+      font-size: 1rem;
+      color: #A0AEC0;
+      opacity: 0.8;
+    }
+
+    .info-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .info-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      transition: all 0.3s ease;
+      animation: fadeInUp 0.6s ease-out;
+      animation-fill-mode: both;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .info-card:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(99, 179, 237, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .info-icon {
+      font-size: 2rem;
+      min-width: 50px;
+      text-align: center;
+      opacity: 0.9;
+    }
+
+    .info-content h3 {
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin: 0 0 8px 0;
+      color: #FFFFFF;
+    }
+
+    .info-content p {
+      font-size: 0.9rem;
+      color: #CBD5E1;
+      line-height: 1.5;
+      margin: 0 0 10px 0;
+    }
+
+    .info-stat {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .stat-number {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #63B3ED;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: #A0AEC0;
+      opacity: 0.8;
+    }
+
+    .quick-facts {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .quick-facts h3 {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: #FFFFFF;
+      margin: 0 0 16px 0;
+      text-align: center;
+    }
+
+    .facts-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .fact-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .fact-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .fact-icon {
+      font-size: 1.1rem;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    .fact-text {
+      font-size: 0.85rem;
+      color: #CBD5E1;
+      line-height: 1.4;
     }
 
     /* === LADO DIREITO - HERO === */
@@ -321,10 +519,10 @@ import { RouterModule } from '@angular/router';
 
     .hero-text h2 {
       font-size: 2.5rem;
-      margin-bottom: 25px;
-      font-weight: 500;
-      color: #ffffff;
-      letter-spacing: 0px;
+      margin-bottom: 20px;
+      font-weight: 300;
+      color: #FFFFFF;
+      letter-spacing: -1px;
     }
 
     .intro-text {
@@ -402,15 +600,18 @@ import { RouterModule } from '@angular/router';
         flex-direction: column;
       }
 
-      .levels-section {
+      .levels-section,
+      .central-section,
+      .hero-section {
+        flex: none;
         padding: 30px 20px;
       }
 
-      .hero-section {
-        padding: 20px;
+      .levels-stack {
+        max-width: 100%;
       }
 
-      .levels-stack {
+      .central-content {
         max-width: 100%;
       }
 
@@ -508,6 +709,55 @@ export class LevelListComponent {
       descricao: 'Transporte e lugares',
       totalPerguntas: 5,
       disponivel: false
+    }
+  ];
+
+  informacoes = [
+    {
+      icone: '🤲',
+      titulo: 'Inclusão Social',
+      descricao: 'LIBRAS é a 2ª língua oficial do Brasil, essencial para incluir a comunidade surda.',
+      estatistica: {
+        numero: '10,7M',
+        label: 'pessoas com deficiência auditiva no Brasil'
+      }
+    },
+    {
+      icone: '🧠',
+      titulo: 'Desenvolvimento Cognitivo',
+      descricao: 'Aprender uma língua visual-espacial desenvolve novas áreas do cérebro.',
+      estatistica: {
+        numero: '2002',
+        label: 'ano de reconhecimento oficial'
+      }
+    },
+    {
+      icone: '💼',
+      titulo: 'Oportunidades Profissionais',
+      descricao: 'Mercado em crescimento para intérpretes e profissionais capacitados.',
+      estatistica: {
+        numero: '+50%',
+        label: 'crescimento na demanda'
+      }
+    }
+  ];
+
+  fatos = [
+    {
+      icone: '✋',
+      texto: 'LIBRAS possui gramática própria e estrutura linguística completa'
+    },
+    {
+      icone: '🏫',
+      texto: 'Disciplina obrigatória nos cursos de licenciatura desde 2005'
+    },
+    {
+      icone: '🌍',
+      texto: 'Cada país tem sua própria língua de sinais'
+    },
+    {
+      icone: '👥',
+      texto: 'Comunidade surda tem cultura e identidade próprias'
     }
   ];
 
