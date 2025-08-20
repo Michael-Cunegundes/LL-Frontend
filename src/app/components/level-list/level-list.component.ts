@@ -21,7 +21,6 @@ import { RouterModule } from '@angular/router';
                class="level-item"
                [class.available]="nivel.disponivel"
                [class.locked]="!nivel.disponivel"
-               [style.z-index]="niveis.length - i"
                [style.animation-delay]="(i * 0.1) + 's'">
 
             <div class="level-content">
@@ -103,7 +102,6 @@ import { RouterModule } from '@angular/router';
       <!-- Disclaimer -->
       <div class="disclaimer">
         <div class="disclaimer-content">
-
           <div class="disclaimer-text">
             <strong></strong> Projeto educacional desenvolvido por não fluente em LIBRAS.
             Para aprendizado profissional, consulte instrutores certificados.
@@ -115,21 +113,11 @@ import { RouterModule } from '@angular/router';
   styles: [`
     .main-container {
       min-height: 100vh;
-      background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%);
+      background: #1a202c;  /* ✅ Fundo escuro similar à imagem */
       display: flex;
       width: 100%;
       position: relative;
       overflow: hidden;
-    }
-
-    /* Efeito sutil de grade no fundo */
-    .main-container::before {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><defs><pattern id='grid' width='40' height='40' patternUnits='userSpaceOnUse'><path d='M 40 0 L 0 0 0 40' fill='none' stroke='%233B82F6' stroke-width='0.5' opacity='0.1'/></pattern></defs><rect width='100%' height='100%' fill='url(%23grid)' /></svg>") repeat;
-      pointer-events: none;
     }
 
     /* === LADO ESQUERDO - NÍVEIS === */
@@ -145,23 +133,22 @@ import { RouterModule } from '@angular/router';
     .app-header {
       text-align: left;
       color: white;
-      margin-bottom: 20px;
+      margin-bottom: 40px;
     }
 
     .app-header h1 {
       font-size: 7rem;
-      margin-bottom: 10px;
-      font-weight: 300;
-      text-shadow: none;
+      margin-bottom: 15px;
+      font-weight: 400;
       color: #FFFFFF;
-      letter-spacing: -2px;
+      letter-spacing: -1px;
     }
 
     .subtitle {
-      font-size: 1.4rem;
-      opacity: 0.8;
+      font-size: 1.2rem;
+      opacity: 0.7;
       margin: 0;
-      color: #CBD5E1;
+      color: #A0AEC0;
       font-weight: 300;
     }
 
@@ -169,20 +156,18 @@ import { RouterModule } from '@angular/router';
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 20px;
-      max-width: 600px;
+      gap: 16px;
+      max-width: 500px;
     }
 
     .level-item {
-      background: #FFFFFF;
-      border-radius: 16px;
-      padding: 32px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      transition: all 0.3s ease;
-      position: relative;
-      min-height: 100px;
-      border: 1px solid #F1F5F9;
-      animation: slideInLeft 0.6s ease-out;
+      background: #2d3748;
+      border-radius: 10px;
+      padding: 15px;
+      transition: all 0.5s ease;
+      min-height: 50px;
+      border: 1px solid #black;
+      animation: slideInLeft 0.5s ease-out;
       animation-fill-mode: both;
     }
 
@@ -198,26 +183,26 @@ import { RouterModule } from '@angular/router';
     }
 
     .level-item.available:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.15);
-      border-color: #3B82F6;
+      transform: translateY(-2px);
+      background: #4a5568;  /* ✅ Hover mais claro */
+      border-color: #3182ce;
     }
 
     .level-item.locked {
-      opacity: 0.6;
-      background: #F8FAFC;
-      border-color: #E2E8F0;
+      opacity: 0.5;
+      background: #2d3748;
+      border-color: #4a5568;
     }
 
     .level-content {
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 16px;
     }
 
     .level-icon {
-      font-size: 2.5rem;
-      min-width: 60px;
+      font-size: 2rem;
+      min-width: 50px;
       text-align: center;
     }
 
@@ -226,74 +211,72 @@ import { RouterModule } from '@angular/router';
     }
 
     .level-info h3 {
-      color: #1E293B;
-      margin: 0 0 8px 0;
-      font-size: 1.4rem;
-      font-weight: 600;
+      color: #FFFFFF;  /* ✅ Texto branco */
+      margin: 0 0 4px 0;
+      font-size: 1.2rem;
+      font-weight: 500;
     }
 
     .level-info p {
-      color: #64748B;
-      margin: 0 0 12px 0;
-      font-size: 0.95rem;
-      line-height: 1.5;
+      color: #A0AEC0;  /* ✅ Texto cinza claro */
+      margin: 0 0 8px 0;
+      font-size: 0.9rem;
+      line-height: 1.4;
     }
 
     .level-stats {
-      background: #EFF6FF;
-      padding: 6px 14px;
-      border-radius: 12px;
+      background: #4a5568;  /* ✅ Background mais escuro */
+      padding: 4px 10px;
+      border-radius: 8px;
       display: inline-block;
-      border: 1px solid #DBEAFE;
+      border: 1px solid #718096;
     }
 
     .questions-count {
-      color: #3B82F6;
-      font-weight: 500;
-      font-size: 0.85rem;
+      color: #63B3ED;  /* ✅ Azul claro */
+      font-weight: 400;
+      font-size: 0.8rem;
     }
 
     .level-action {
-      min-width: 120px;
+      min-width: 100px;
     }
 
     .start-btn {
-      background: #3B82F6;
-      color: #FFFFFF;
-      border: none;
-      padding: 14px 24px;
-      border-radius: 12px;
-      font-size: 0.95rem;
+      background: #3182ce;
+      color: #000000;
+      border: 10px;
+      padding: 12px 50px;
+      border-radius: 10px;
+      font-size: 1rem;
       font-weight: 500;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.5s ease;
       width: 100%;
-      min-height: 48px;
-      letter-spacing: 0.3px;
+      min-height: 50px;
     }
 
     .start-btn:hover:not(:disabled) {
-      background: #2563EB;
+      background: #2c5282;
       transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
     }
 
     .locked-btn {
-      background: #F1F5F9;
-      color: #94A3B8;
-      border: 1px solid #E2E8F0;
-      padding: 14px 24px;
-      border-radius: 12px;
-      font-size: 0.95rem;
-      font-weight: 500;
+      background: #4a5568;
+      color: #A0AEC0;
+      border: 1px solid #718096;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 400;
       cursor: not-allowed;
       width: 100%;
-      min-height: 48px;
+      min-height: 40px;
     }
 
     /* === LADO DIREITO - HERO === */
     .hero-section {
-      flex: 0.7;
+      flex: 1;
       padding: 40px;
       display: flex;
       align-items: center;
@@ -305,25 +288,25 @@ import { RouterModule } from '@angular/router';
     .hero-content {
       text-align: center;
       color: white;
-      max-width: 500px;
+      max-width: 450px;
     }
 
     .libras-demo {
-      margin-bottom: 40px;
+      margin-bottom: 30px;
     }
 
     .libras-sign {
-      width: 250px;
-      height: 250px;
+      width: 200px;
+      height: 200px;
       border-radius: 50%;
       object-fit: cover;
       background: rgba(255, 255, 255, 0.1);
-      border: 2px solid rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.15);
       transition: all 0.3s ease;
     }
 
     .libras-sign:hover {
-      border-color: rgba(255, 255, 255, 0.4);
+      border-color: rgba(255, 255, 255, 0.3);
       transform: scale(1.02);
     }
 
@@ -332,23 +315,23 @@ import { RouterModule } from '@angular/router';
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 3rem;
+      font-size: 2.5rem;
       color: white;
     }
 
     .hero-text h2 {
-      font-size: 2.8rem;
-      margin-bottom: 24px;
-      font-weight: 300;
-      color: #FFFFFF;
-      letter-spacing: -1px;
+      font-size: 2.5rem;
+      margin-bottom: 25px;
+      font-weight: 500;
+      color: #ffffff;
+      letter-spacing: 0px;
     }
 
     .intro-text {
-      font-size: 1.2rem;
-      line-height: 1.7;
-      opacity: 0.9;
-      margin-bottom: 32px;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      opacity: 0.8;
+      margin-bottom: 25px;
       text-align: center;
       color: #CBD5E1;
       font-weight: 300;
@@ -356,31 +339,31 @@ import { RouterModule } from '@angular/router';
 
     .benefits {
       display: grid;
-      gap: 15px;
+      gap: 12px;
       text-align: left;
     }
 
     .benefit {
       display: flex;
       align-items: center;
-      gap: 16px;
-      padding: 16px 20px;
+      gap: 12px;
+      padding: 12px 16px;
       background: rgba(255, 255, 255, 0.05);
-      border-radius: 12px;
+      border-radius: 8px;
       transition: all 0.3s ease;
       border: 1px solid rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
+      font-size: 0.95rem;
     }
 
     .benefit:hover {
       background: rgba(255, 255, 255, 0.08);
-      transform: translateX(4px);
-      border-color: rgba(59, 130, 246, 0.3);
+      transform: translateX(2px);
+      border-color: rgba(49, 130, 206, 0.3);
     }
 
     .benefit-icon {
-      font-size: 1.4rem;
-      width: 32px;
+      font-size: 1.2rem;
+      width: 28px;
       text-align: center;
       flex-shrink: 0;
       opacity: 0.9;
@@ -391,61 +374,26 @@ import { RouterModule } from '@angular/router';
       position: fixed;
       bottom: 20px;
       left: 20px;
-      max-width: 300px;
+      max-width: 280px;
       z-index: 1000;
       animation: slideInLeft 1s ease-out 2s both;
     }
 
-    @keyframes slideInLeft {
-      from {
-        opacity: 0;
-        transform: translateX(-50px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-
     .disclaimer-content {
-      background: rgba(15, 23, 42, 0.95);
+      background: rgba(45, 55, 72, 0.95);  /* ✅ Fundo escuro */
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(59, 130, 246, 0.2);
-      border-radius: 12px;
-      padding: 14px 16px;
+      border: 1px solid rgba(74, 85, 104, 0.6);
+      border-radius: 8px;
+      padding: 12px 14px;
       color: #CBD5E1;
-      font-size: 0.8rem;
-      line-height: 1.4;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-    }
-
-    .disclaimer-icon {
-      font-size: 1.1rem;
-      flex-shrink: 0;
-      margin-top: 1px;
+      font-size: 0.75rem;
+      line-height: 1.3;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     }
 
     .disclaimer-text strong {
-      color: #3B82F6;
-      font-weight: 600;
-    }
-
-    /* Responsividade do disclaimer */
-    @media (max-width: 768px) {
-      .disclaimer {
-        bottom: 15px;
-        left: 15px;
-        right: 15px;
-        max-width: none;
-      }
-
-      .disclaimer-content {
-        font-size: 0.75rem;
-        padding: 12px 14px;
-      }
+      color: #63B3ED;  /* ✅ Azul claro */
+      font-weight: 500;
     }
 
     /* === RESPONSIVIDADE === */
@@ -467,51 +415,66 @@ import { RouterModule } from '@angular/router';
       }
 
       .libras-sign {
-        width: 200px;
-        height: 200px;
+        width: 180px;
+        height: 180px;
       }
 
       .hero-text h2 {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
       }
 
       .app-header h1 {
-        font-size: 4rem;
+        font-size: 3rem;
       }
     }
 
     @media (max-width: 768px) {
       .app-header h1 {
-        font-size: 3rem;
+        font-size: 2.5rem;
       }
 
       .hero-text h2 {
-        font-size: 2rem;
+        font-size: 1.8rem;
       }
 
       .level-content {
-        flex-direction: column;
-        text-align: center;
-        gap: 15px;
-      }
-
-      .level-action {
-        min-width: auto;
-        width: 100%;
-      }
-
-      .libras-sign {
-        width: 180px;
-        height: 180px;
-      }
-
-      .benefits {
         gap: 12px;
       }
 
+      .level-info h3 {
+        font-size: 1.1rem;
+      }
+
+      .level-info p {
+        font-size: 0.85rem;
+      }
+
+      .libras-sign {
+        width: 150px;
+        height: 150px;
+      }
+
+      .benefits {
+        gap: 10px;
+      }
+
       .benefit {
-        padding: 10px 14px;
+        padding: 10px 12px;
         font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .disclaimer {
+        bottom: 15px;
+        left: 15px;
+        right: 15px;
+        max-width: none;
+      }
+
+      .disclaimer-content {
+        font-size: 0.7rem;
+        padding: 10px 12px;
       }
     }
   `]
