@@ -102,10 +102,12 @@ import { RouterModule } from '@angular/router';
       <div class="hero-section">
         <div class="hero-content">
           <div class="libras-demo">
-            <img src="/images/logo.png"
-                 alt="Logo LibraLingo - Aprenda LIBRAS"
-                 class="libras-sign"
-                 (error)="onImageError($event)">
+            <div class="logo-container">
+              <div class="logo-circle">
+                <span class="logo-hands">🤟</span>
+              </div>
+              <div class="logo-text">LibraLingo</div>
+            </div>
           </div>
 
           <div class="hero-text">
@@ -493,28 +495,43 @@ import { RouterModule } from '@angular/router';
       margin-bottom: 30px;
     }
 
-    .libras-sign {
+    .logo-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo-circle {
       width: 200px;
       height: 200px;
       border-radius: 50%;
-      object-fit: cover;
-      background: rgba(255, 255, 255, 0.1);
-      border: 2px solid rgba(255, 255, 255, 0.15);
-      transition: all 0.3s ease;
-    }
-
-    .libras-sign:hover {
-      border-color: rgba(255, 255, 255, 0.3);
-      transform: scale(1.02);
-    }
-
-    .libras-sign.error {
-      background: rgba(255, 255, 255, 0.1);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2.5rem;
+      border: 3px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .logo-circle:hover {
+      transform: scale(1.05);
+      border-color: rgba(255, 255, 255, 0.4);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .logo-hands {
+      font-size: 4rem;
+      filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+    }
+
+    .logo-text {
+      font-size: 1.8rem;
+      font-weight: 600;
       color: white;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      letter-spacing: 1px;
     }
 
     .hero-text h2 {
@@ -615,9 +632,17 @@ import { RouterModule } from '@angular/router';
         max-width: 100%;
       }
 
-      .libras-sign {
+      .logo-circle {
         width: 180px;
         height: 180px;
+      }
+
+      .logo-hands {
+        font-size: 3.5rem;
+      }
+
+      .logo-text {
+        font-size: 1.6rem;
       }
 
       .hero-text h2 {
@@ -650,9 +675,17 @@ import { RouterModule } from '@angular/router';
         font-size: 0.85rem;
       }
 
-      .libras-sign {
+      .logo-circle {
         width: 150px;
         height: 150px;
+      }
+
+      .logo-hands {
+        font-size: 3rem;
+      }
+
+      .logo-text {
+        font-size: 1.4rem;
       }
 
       .benefits {
@@ -684,29 +717,36 @@ export class LevelListComponent {
   niveis = [
     {
       numero: 1,
-      emoji: '🌟',
-      descricao: 'Sinais básicos - Alfabeto e números',
+      emoji: '🔢',
+      descricao: 'Números e cores básicas',
       totalPerguntas: 5,
       disponivel: true
     },
     {
       numero: 2,
-      emoji: '🏠',
-      descricao: 'Família e casa',
+      emoji: '👋',
+      descricao: 'Cumprimentos essenciais',
       totalPerguntas: 5,
       disponivel: false
     },
     {
       numero: 3,
-      emoji: '🍎',
-      descricao: 'Alimentos e bebidas',
+      emoji: '👨‍👩‍👧‍👦',
+      descricao: 'Família',
       totalPerguntas: 5,
       disponivel: false
     },
     {
       numero: 4,
-      emoji: '🚗',
-      descricao: 'Transporte e lugares',
+      emoji: '🍎',
+      descricao: 'Alimentos básicos',
+      totalPerguntas: 5,
+      disponivel: false
+    },
+    {
+      numero: 5,
+      emoji: '🏠',
+      descricao: 'Lugares importantes',
       totalPerguntas: 5,
       disponivel: false
     }
@@ -761,11 +801,8 @@ export class LevelListComponent {
     }
   ];
 
-  // Método para lidar com erro de carregamento da imagem
+  // Método para lidar com erro de carregamento da imagem (mantido para compatibilidade)
   onImageError(event: Event) {
-    const img = event.target as HTMLImageElement;
-    img.classList.add('error');
-    img.innerHTML = '🤟'; // Emoji de mão em LIBRAS como fallback
-    console.warn('Imagem do logo não pôde ser carregada. Verifique se existe em /assets/images/logo.png no backend');
+    console.warn('Logo agora é CSS - método mantido para compatibilidade');
   }
 }

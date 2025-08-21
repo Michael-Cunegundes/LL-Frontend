@@ -65,8 +65,8 @@ import { RouterModule } from '@angular/router';
         <div class="hero-content">
           <div class="libras-demo">
             <!-- ✅ CORRIGIDO: Agora aponta para a imagem do backend -->
-            <img src="/images/logo.png"
-                 alt="Logo LibraLingo - Aprenda LIBRAS"
+            <img src="/images/logoo.png"
+                 alt="Logoo LibraLingo - Aprenda LIBRAS"
                  class="libras-sign"
                  (error)="onImageError($event)">
           </div>
