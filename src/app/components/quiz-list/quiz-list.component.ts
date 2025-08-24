@@ -3,11 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { QuizService } from '../../services/quiz.service';
-import {
-  QuestaoDTO,
-  RespostaQuizDTO
-} from '../../models';
+import { QuestaoDTO, TipoPergunta, OptionDTO, RespostaQuizDTO, ResultadoQuizDTO } from '../../models';
 
 @Component({
   selector: 'quiz-list',
@@ -26,8 +22,96 @@ export class QuizListComponent implements OnInit {
   erro = '';
   isAnswered = false;
 
+  // ✅ DADOS LOCAIS - NÍVEL 1
+  private questoesLocais = {
+    1: [
+      // Pergunta 1: Bom Dia (Imagem → Texto)
+      {
+        id: 1,
+        tipo: 'IMAGEM_PARA_TEXTO' as TipoPergunta,
+        prompt: ['/images/oipart1.png', '/images/oipart2.png'],
+        opcoes: [
+          { texto: 'Bom dia', imagemUrl: undefined },
+          { texto: 'Boa tarde', imagemUrl: undefined },
+          { texto: 'Oi', imagemUrl: undefined },
+          { texto: 'Tchau', imagemUrl: undefined }
+        ] as OptionDTO[],
+        indiceCorreto: 2
+      },
+      // Pergunta 2: Oi (Imagem → Texto)
+      {
+        id: 2,
+        tipo: 'IMAGEM_PARA_TEXTO' as TipoPergunta,
+        prompt: ['/images/oi.png'],
+        opcoes: [
+          { texto: 'Tchau', imagemUrl: undefined },
+          { texto: 'Oi', imagemUrl: undefined },
+          { texto: 'Obrigado', imagemUrl: undefined },
+          { texto: 'Desculpa', imagemUrl: undefined }
+        ] as OptionDTO[],
+        indiceCorreto: 1
+      },
+      // Pergunta 3: Tchau (Imagem → Texto)
+      {
+        id: 3,
+        tipo: 'IMAGEM_PARA_TEXTO' as TipoPergunta,
+        prompt: ['/images/tchau.png'],
+        opcoes: [
+          { texto: 'Oi', imagemUrl: undefined },
+          { texto: 'Bom dia', imagemUrl: undefined },
+          { texto: 'Tchau', imagemUrl: undefined },
+          { texto: 'Obrigado', imagemUrl: undefined }
+        ] as OptionDTO[],
+        indiceCorreto: 2
+      },
+      // Pergunta 4: Obrigado (Texto → Imagem)
+      {
+        id: 4,
+        tipo: 'TEXTO_PARA_IMAGEM' as TipoPergunta,
+        prompt: ['Obrigado'],
+        opcoes: [
+          { texto: undefined, imagemUrl: '/images/obrigado.png' },
+          { texto: undefined, imagemUrl: '/images/oi.png' },
+          { texto: undefined, imagemUrl: '/images/tchau.png' },
+          { texto: undefined, imagemUrl: '/images/bomdia.png' }
+        ] as OptionDTO[],
+        indiceCorreto: 0
+      },
+      // Pergunta 5: Eu (Texto → Imagem)
+      {
+        id: 5,
+        tipo: 'TEXTO_PARA_IMAGEM' as TipoPergunta,
+        prompt: ['Eu'],
+        opcoes: [
+          { texto: undefined, imagemUrl: '/images/eu.png' },
+          { texto: undefined, imagemUrl: '/images/mim.png' },
+          { texto: undefined, imagemUrl: '/images/obrigado.png' },
+          { texto: undefined, imagemUrl: '/images/sol.png' }
+        ] as OptionDTO[],
+        indiceCorreto: 0
+      }
+    ] as QuestaoDTO[],
+
+    // ✅ Preparado para outros níveis
+    2: [
+      // Pergunta 1 do Nível 2
+      {
+        id: 6,
+        tipo: 'IMAGEM_PARA_TEXTO' as TipoPergunta,
+        prompt: ['/images/sol.png'],
+        opcoes: [
+          { texto: 'Sol', imagemUrl: undefined },
+          { texto: 'Lua', imagemUrl: undefined },
+          { texto: 'Estrela', imagemUrl: undefined },
+          { texto: 'Nuvem', imagemUrl: undefined }
+        ] as OptionDTO[],
+        indiceCorreto: 0
+      }
+      // ... adicionar mais perguntas do nível 2 depois
+    ] as QuestaoDTO[]
+  };
+
   constructor(
-    private quiz: QuizService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -39,7 +123,6 @@ export class QuizListComponent implements OnInit {
     });
   }
 
-  // ✅ MÉTODO ADICIONADO para resolver o erro String.fromCharCode
   getOptionLetter(index: number): string {
     return String.fromCharCode(65 + index); // A, B, C, D...
   }
@@ -48,21 +131,33 @@ export class QuizListComponent implements OnInit {
     this.loading = true;
     this.erro = '';
 
-    this.quiz.getQuestoesPorNivel(this.level).subscribe({
-      next: (questoes) => {
-        this.perguntas = questoes;
+    // Simular loading para UX
+    setTimeout(() => {
+      try {
+        // ✅ Buscar perguntas locais por nível
+        const questoesDoNivel = this.questoesLocais[this.level as keyof typeof this.questoesLocais];
+
+        if (!questoesDoNivel || questoesDoNivel.length === 0) {
+          this.erro = `Nível ${this.level} ainda não disponível. Tente o Nível 1.`;
+          this.loading = false;
+          return;
+        }
+
+        this.perguntas = questoesDoNivel;
         this.respostas = this.perguntas.map(p => ({
           perguntaId: p.id,
           opcaoEscolhida: null
         }));
+
+        console.log(`✅ Carregadas ${this.perguntas.length} perguntas do Nível ${this.level}`);
         this.loading = false;
-      },
-      error: (err) => {
-        console.error('Erro ao carregar perguntas:', err);
+
+      } catch (error) {
+        console.error('Erro ao carregar perguntas:', error);
         this.erro = 'Erro ao carregar perguntas. Tente novamente.';
         this.loading = false;
       }
-    });
+    }, 500); // 500ms de delay para simular carregamento
   }
 
   get currentQuestion(): QuestaoDTO | null {
@@ -117,27 +212,55 @@ export class QuizListComponent implements OnInit {
 
   submitQuiz() {
     this.loading = true;
-    this.quiz.submitRespostas(this.respostas).subscribe({
-      next: (resultado) => {
-        this.router.navigate(
-          ['/resultado'],
-          {
-            state: {
-              resultado,
-              level: this.level
-            }
-          }
-        );
-      },
-      error: (err) => {
-        console.error('Erro ao enviar respostas:', err);
-        this.erro = 'Erro ao enviar respostas. Tente novamente.';
-        this.loading = false;
+
+    // ✅ Calcular resultado localmente
+    setTimeout(() => {
+      let acertos = 0;
+
+      this.respostas.forEach((resposta, index) => {
+        const pergunta = this.perguntas[index];
+        if (resposta.opcaoEscolhida === pergunta.indiceCorreto) {
+          acertos++;
+        }
+      });
+
+      const total = this.perguntas.length;
+      const percentual = Math.round((acertos / total) * 100);
+
+      let mensagem = '';
+      if (percentual >= 80) {
+        mensagem = `Excelente! Você acertou ${acertos} de ${total} perguntas (${percentual}%)`;
+      } else if (percentual >= 60) {
+        mensagem = `Muito bem! Você acertou ${acertos} de ${total} perguntas (${percentual}%)`;
+      } else {
+        mensagem = `Continue praticando! Você acertou ${acertos} de ${total} perguntas (${percentual}%)`;
       }
-    });
+
+      const resultado: ResultadoQuizDTO = {
+        pontuacao: acertos,
+        mensagem: mensagem
+      };
+
+      console.log(`🎯 Resultado: ${acertos}/${total} (${percentual}%)`);
+
+      this.router.navigate(['/resultado'], {
+        state: {
+          resultado,
+          level: this.level
+        }
+      });
+    }, 1000); // 1 segundo para simular processamento
   }
 
   voltarNiveis(): void {
     this.router.navigate(['']);
+  }
+
+  // ✅ MÉTODO PARA ADICIONAR NOVAS PERGUNTAS FACILMENTE
+  adicionarPergunta(nivel: number, pergunta: QuestaoDTO) {
+    if (!this.questoesLocais[nivel as keyof typeof this.questoesLocais]) {
+      this.questoesLocais[nivel as keyof typeof this.questoesLocais] = [];
+    }
+    this.questoesLocais[nivel as keyof typeof this.questoesLocais].push(pergunta);
   }
 }
