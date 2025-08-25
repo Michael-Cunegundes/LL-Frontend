@@ -42,20 +42,20 @@ export class QuizListComponent implements OnInit {
       {
         id: 2,
         tipo: 'IMAGEM_PARA_TEXTO' as TipoPergunta,
-        prompt: ['/images/oi.png'],
+        prompt: ['/images/desculpa.png'],
         opcoes: [
           { texto: 'Tchau', imagemUrl: undefined },
           { texto: 'Oi', imagemUrl: undefined },
           { texto: 'Obrigado', imagemUrl: undefined },
           { texto: 'Desculpa', imagemUrl: undefined }
         ] as OptionDTO[],
-        indiceCorreto: 1
+        indiceCorreto: 3
       },
       // Pergunta 3: Tchau (Imagem → Texto)
       {
         id: 3,
         tipo: 'IMAGEM_PARA_TEXTO' as TipoPergunta,
-        prompt: ['/images/tchau.png'],
+        prompt: ['/images/tchau1.png'],
         opcoes: [
           { texto: 'Oi', imagemUrl: undefined },
           { texto: 'Bom dia', imagemUrl: undefined },
@@ -70,8 +70,8 @@ export class QuizListComponent implements OnInit {
         tipo: 'TEXTO_PARA_IMAGEM' as TipoPergunta,
         prompt: ['Obrigado'],
         opcoes: [
-          { texto: undefined, imagemUrl: '/images/obrigado.png' },
-          { texto: undefined, imagemUrl: '/images/oi.png' },
+          { texto: undefined, imagemUrl: '/images/desculpa2.png' },
+          { texto: undefined, imagemUrl: '/images/idade.png' },
           { texto: undefined, imagemUrl: '/images/tchau.png' },
           { texto: undefined, imagemUrl: '/images/bomdia.png' }
         ] as OptionDTO[],
