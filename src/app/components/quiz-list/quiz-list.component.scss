@@ -159,17 +159,21 @@
   margin-bottom: 30px;
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 15px;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .libras-image {
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 16px;
-  border: 3px solid #E5E7EB;
+  width: 280px;          /* ✅ Aumentado de 200px para 280px */
+  height: 280px;         /* ✅ Aumentado de 200px para 280px */
+  object-fit: contain;
+//   border-radius: 16px;
+//   border: 1px solid #E5E7EB;
   transition: all 0.3s ease;
+  background: white;
+  padding: 12px;         /* ✅ Aumentado padding também */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
   &:hover {
     transform: scale(1.05);
@@ -272,9 +276,9 @@
   display: block;
   cursor: pointer;
   text-align: center;
-  border: 3px solid #E5E7EB;
-  border-radius: 16px;
-  padding: 20px;
+//   border: 1px solid #E5E7EB;
+//   border-radius: 16px;
+//   padding: 20px;
   transition: all 0.3s ease;
   background: #F9FAFB;
 
@@ -317,11 +321,13 @@
 
   .option-image {
     width: 100%;
-    height: 120px;
-    object-fit: cover;
+    height: 180px;        /* ✅ Aumentado de 150px para 180px */
+    object-fit: contain;
     border-radius: 12px;
     border: 2px solid transparent;
     transition: all 0.3s ease;
+    background: white;
+    padding: 10px;        /* ✅ Aumentado de 8px para 10px */
   }
 }
 
@@ -404,54 +410,4 @@
   }
 }
 
-/* === RESPONSIVIDADE === */
-@media (max-width: 768px) {
-  .quiz-container {
-    padding: 0;
-  }
-
-  .header-content {
-    padding: 0 20px;
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .progress-info h1 {
-    font-size: 1.2rem;
-  }
-
-  .question-card {
-    padding: 30px 20px;
-    margin: 20px;
-    border-radius: 16px;
-  }
-
-  .libras-image {
-    width: 120px;
-    height: 120px;
-  }
-
-  .options-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  .image-options-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-  }
-
-  .navigation {
-    margin: 20px;
-    flex-direction: column;
-    gap: 15px;
-
-    .nav-center {
-      order: -1;
-    }
-
-    .nav-btn {
-      width: 100%;
-    }
-  }
-}
+/* Responsividade removida - foco em desktop */
