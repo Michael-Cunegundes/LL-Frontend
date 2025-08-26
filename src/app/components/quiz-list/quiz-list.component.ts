@@ -22,10 +22,8 @@ export class QuizListComponent implements OnInit {
   erro = '';
   isAnswered = false;
 
-  // ✅ DADOS LOCAIS - NÍVEL 1
   private questoesLocais = {
     1: [
-      // Pergunta 1: Bom Dia (Imagem → Texto)
       {
         id: 1,
         tipo: 'IMAGEM_PARA_TEXTO' as TipoPergunta,
@@ -38,7 +36,6 @@ export class QuizListComponent implements OnInit {
         ] as OptionDTO[],
         indiceCorreto: 2
       },
-      // Pergunta 2: Oi (Imagem → Texto)
       {
         id: 2,
         tipo: 'IMAGEM_PARA_TEXTO' as TipoPergunta,
@@ -51,7 +48,6 @@ export class QuizListComponent implements OnInit {
         ] as OptionDTO[],
         indiceCorreto: 3
       },
-      // Pergunta 3: Tchau (Imagem → Texto)
       {
         id: 3,
         tipo: 'IMAGEM_PARA_TEXTO' as TipoPergunta,
@@ -64,7 +60,6 @@ export class QuizListComponent implements OnInit {
         ] as OptionDTO[],
         indiceCorreto: 2
       },
-      // Pergunta 4: Obrigado (Texto → Imagem)
       {
         id: 4,
         tipo: 'TEXTO_PARA_IMAGEM' as TipoPergunta,
@@ -77,7 +72,6 @@ export class QuizListComponent implements OnInit {
         ] as OptionDTO[],
         indiceCorreto: 0
       },
-      // Pergunta 5: Eu (Texto → Imagem)
       {
         id: 5,
         tipo: 'TEXTO_PARA_IMAGEM' as TipoPergunta,
@@ -91,10 +85,7 @@ export class QuizListComponent implements OnInit {
         indiceCorreto: 0
       }
     ] as QuestaoDTO[],
-
-    // ✅ Preparado para outros níveis
     2: [
-      // Pergunta 1 do Nível 2
       {
         id: 6,
         tipo: 'IMAGEM_PARA_TEXTO' as TipoPergunta,
@@ -107,7 +98,6 @@ export class QuizListComponent implements OnInit {
         ] as OptionDTO[],
         indiceCorreto: 0
       }
-      // ... adicionar mais perguntas do nível 2 depois
     ] as QuestaoDTO[]
   };
 
@@ -124,17 +114,15 @@ export class QuizListComponent implements OnInit {
   }
 
   getOptionLetter(index: number): string {
-    return String.fromCharCode(65 + index); // A, B, C, D...
+    return String.fromCharCode(65 + index);
   }
 
   carregarPerguntas() {
     this.loading = true;
     this.erro = '';
 
-    // Simular loading para UX
     setTimeout(() => {
       try {
-        // ✅ Buscar perguntas locais por nível
         const questoesDoNivel = this.questoesLocais[this.level as keyof typeof this.questoesLocais];
 
         if (!questoesDoNivel || questoesDoNivel.length === 0) {
@@ -157,7 +145,7 @@ export class QuizListComponent implements OnInit {
         this.erro = 'Erro ao carregar perguntas. Tente novamente.';
         this.loading = false;
       }
-    }, 500); // 500ms de delay para simular carregamento
+    }, 500);
   }
 
   get currentQuestion(): QuestaoDTO | null {
@@ -175,8 +163,6 @@ export class QuizListComponent implements OnInit {
   selectOption(optionIndex: number) {
     this.selectedOption = optionIndex;
     this.isAnswered = true;
-
-    // Salva a resposta
     this.respostas[this.currentQuestionIndex].opcaoEscolhida = optionIndex;
   }
 
@@ -190,7 +176,6 @@ export class QuizListComponent implements OnInit {
       this.selectedOption = null;
       this.isAnswered = false;
 
-      // Se já havia uma resposta salva, carrega ela
       const savedAnswer = this.respostas[this.currentQuestionIndex].opcaoEscolhida;
       if (savedAnswer !== null) {
         this.selectedOption = savedAnswer;
@@ -203,7 +188,6 @@ export class QuizListComponent implements OnInit {
     if (this.currentQuestionIndex > 0) {
       this.currentQuestionIndex--;
 
-      // Carrega a resposta salva
       const savedAnswer = this.respostas[this.currentQuestionIndex].opcaoEscolhida;
       this.selectedOption = savedAnswer;
       this.isAnswered = savedAnswer !== null;
@@ -213,7 +197,6 @@ export class QuizListComponent implements OnInit {
   submitQuiz() {
     this.loading = true;
 
-    // ✅ Calcular resultado localmente
     setTimeout(() => {
       let acertos = 0;
 
@@ -249,14 +232,13 @@ export class QuizListComponent implements OnInit {
           level: this.level
         }
       });
-    }, 1000); // 1 segundo para simular processamento
+    }, 1000);
   }
 
   voltarNiveis(): void {
     this.router.navigate(['']);
   }
 
-  // ✅ MÉTODO PARA ADICIONAR NOVAS PERGUNTAS FACILMENTE
   adicionarPergunta(nivel: number, pergunta: QuestaoDTO) {
     if (!this.questoesLocais[nivel as keyof typeof this.questoesLocais]) {
       this.questoesLocais[nivel as keyof typeof this.questoesLocais] = [];
