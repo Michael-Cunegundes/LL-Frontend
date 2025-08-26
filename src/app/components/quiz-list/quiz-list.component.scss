@@ -165,14 +165,14 @@
 }
 
 .libras-image {
-  width: 280px;          /* ✅ Aumentado de 200px para 280px */
-  height: 280px;         /* ✅ Aumentado de 200px para 280px */
+  width: 280px;
+  height: 280px;
   object-fit: contain;
   border-radius: 16px;
   border: 3px solid #E5E7EB;
   transition: all 0.3s ease;
   background: white;
-  padding: 12px;         /* ✅ Aumentado padding também */
+  padding: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
   &:hover {
@@ -265,10 +265,10 @@
   }
 }
 
-/* === OPÇÕES DE IMAGEM === */
+/* === OPÇÕES DE IMAGEM - GRID 2x2 === */
 .image-options-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: 1fr 1fr;  /* ✅ APENAS ESSA MUDANÇA: 2 colunas fixas */
   gap: 20px;
 }
 
@@ -321,13 +321,13 @@
 
   .option-image {
     width: 100%;
-    height: 180px;        /* ✅ Aumentado de 150px para 180px */
+    height: 180px;
     object-fit: contain;
     border-radius: 12px;
     border: 2px solid transparent;
     transition: all 0.3s ease;
     background: white;
-    padding: 10px;        /* ✅ Aumentado de 8px para 10px */
+    padding: 10px;
   }
 }
 
@@ -409,5 +409,3 @@
     }
   }
 }
-
-/* Responsividade removida - foco em desktop */
