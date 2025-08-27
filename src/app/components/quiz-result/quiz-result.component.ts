@@ -32,7 +32,7 @@ import { ResultadoQuizDTO } from '../../models';
             <span *ngIf="pontuacaoPercentual < 60">📚</span>
           </div>
 
-          <h2>Quase!</h2>
+          <h2>{{ tituloResultado }}</h2>
 
           <div class="score-display">
             <div class="score-circle">

@@ -717,15 +717,15 @@ export class LevelListComponent {
   niveis = [
     {
       numero: 1,
-      emoji: '🔢',
-      descricao: 'Números e cores básicas',
+      emoji: '👋',
+      descricao: 'Cumprimentos essenciais',
       totalPerguntas: 5,
       disponivel: true
     },
     {
       numero: 2,
       emoji: '👋',
-      descricao: 'Cumprimentos essenciais',
+      descricao: 'Numeros',
       totalPerguntas: 5,
       disponivel: false
     },
