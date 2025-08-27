@@ -214,9 +214,9 @@ export class QuizListComponent implements OnInit {
       if (percentual >= 80) {
         mensagem = `Excelente! Você acertou ${acertos} de ${total} perguntas (${percentual}%)`;
       } else if (percentual >= 60) {
-        mensagem = `Muito bem! Você acertou ${acertos} de ${total} perguntas (${percentual}%)`;
+        mensagem = `Você acertou ${acertos} de ${total} perguntas (${percentual}%)`;
       } else {
-        mensagem = `Continue praticando! Você acertou ${acertos} de ${total} perguntas (${percentual}%)`;
+        mensagem = `Você acertou ${acertos} de ${total} perguntas (${percentual}%)`;
       }
 
       const resultado: ResultadoQuizDTO = {

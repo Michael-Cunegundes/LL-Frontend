@@ -152,7 +152,7 @@ import { RouterModule } from '@angular/router';
   `,
   styles: [`
     .main-container {
-      min-height: 100vh;
+      height: 100vh;
       background: #1a202c;
       display: flex;
       width: 100%;
@@ -163,7 +163,7 @@ import { RouterModule } from '@angular/router';
     /* === LADO ESQUERDO - NÍVEIS === */
     .levels-section {
       flex: 1;
-      padding: 40px;
+      padding: 20px 40px;
       display: flex;
       flex-direction: column;
       position: relative;
@@ -319,7 +319,7 @@ import { RouterModule } from '@angular/router';
     /* === SEÇÃO CENTRAL - POR QUE APRENDER LIBRAS === */
     .central-section {
       flex: 1.2;
-      padding: 40px 20px;
+      padding: 20px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -477,7 +477,7 @@ import { RouterModule } from '@angular/router';
     /* === LADO DIREITO - HERO === */
     .hero-section {
       flex: 1;
-      padding: 40px;
+      padding: 20px;
       display: flex;
       align-items: center;
       justify-content: center;

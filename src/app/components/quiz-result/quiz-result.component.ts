@@ -32,7 +32,7 @@ import { ResultadoQuizDTO } from '../../models';
             <span *ngIf="pontuacaoPercentual < 60">📚</span>
           </div>
 
-          <h2>Parabéns!</h2>
+          <h2>Quase!</h2>
 
           <div class="score-display">
             <div class="score-circle">
@@ -268,13 +268,23 @@ export class QuizResultComponent {
   get feedback(): string {
     const percentual = this.pontuacaoPercentual;
     if (percentual >= 80) {
-      return 'Excelente! Você domina bem esse nível de LIBRAS!';
+      return 'Boa! Você passou por este nível de LIBRAS!';
     } else if (percentual >= 60) {
       return 'Você precisa acerta pelo menos 4 para desbloquear o proximo nivel.';
     } else {
       return 'Você precisa acerta pelo menos 4 para desbloquear o proximo nivel.';
     }
   }
+
+get tituloResultado(): string {
+  const acertos = this.resultado?.pontuacao || 0;
+
+  if (acertos >= 4) {
+    return 'Parabéns!';
+  } else {
+    return 'Continue tentando!';
+  }
+}
 
   get feedbackClass(): string {
     const percentual = this.pontuacaoPercentual;

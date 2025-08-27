@@ -1,13 +1,14 @@
 .quiz-container {
-  min-height: 100vh;
+  height: 100vh;
   background: #1a202c;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 /* Header */
 .quiz-header {
-  padding: 25px;
+  padding: 15px;
   background: rgba(45, 55, 72, 0.95);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid #4a5568;
@@ -69,7 +70,7 @@
 }
 
 .progress-text {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: #a0aec0;
 }
 
@@ -79,7 +80,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px;
+  padding: 10px 15px;
 }
 
 .question-container {
@@ -236,7 +237,7 @@
 
 .option-image {
   width: 100%;
-  height: 140px;
+  height: 160px;
   object-fit: contain;
   border-radius: 8px;
   background: white;
