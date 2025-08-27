@@ -1,4 +1,5 @@
-// src/app/components/quiz-result/quiz-result.component.ts
+// Apenas cole ESTA PARTE no arquivo quiz-result.component.ts
+
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -10,56 +11,124 @@ import { ResultadoQuizDTO } from '../../models';
   imports: [CommonModule, RouterModule],
   template: `
     <div class="result-container">
-      <div class="result-card">
-        <div class="result-icon">
-          <span *ngIf="pontuacaoPercentual >= 80">🎉</span>
-          <span *ngIf="pontuacaoPercentual >= 60 && pontuacaoPercentual < 80">👍</span>
-          <span *ngIf="pontuacaoPercentual < 60">📚</span>
-        </div>
-
-        <h1>Resultado do Quiz</h1>
-
-        <div class="score-display">
-          <div class="score-circle">
-            <span class="score-number">{{ resultado?.pontuacao || 0 }}</span>
-            <span class="score-total">/ {{ totalPerguntas }}</span>
+      <!-- Header consistente -->
+      <header class="result-header">
+        <div class="header-content">
+          <button class="back-btn" (click)="voltarNiveis()">
+            <span>←</span> Voltar aos Níveis
+          </button>
+          <div class="header-info">
+            <h1>Resultado do Quiz - Nível {{ level }}</h1>
           </div>
-          <p class="score-percentage">{{ pontuacaoPercentual }}%</p>
         </div>
+      </header>
 
-        <p class="result-message">{{ resultado?.mensagem || 'Resultado não disponível' }}</p>
+      <!-- Conteúdo principal -->
+      <div class="result-content">
+        <div class="result-card">
+          <div class="result-icon">
+            <span *ngIf="pontuacaoPercentual >= 80">🎉</span>
+            <span *ngIf="pontuacaoPercentual >= 60 && pontuacaoPercentual < 80">👍</span>
+            <span *ngIf="pontuacaoPercentual < 60">📚</span>
+          </div>
 
-        <div class="feedback" [ngClass]="feedbackClass">
-          <p>{{ feedback }}</p>
-        </div>
+          <h2>Parabéns!</h2>
 
-        <div class="action-buttons">
-          <button (click)="voltarNiveis()" class="btn btn-primary">
-            Escolher Outro Nível
-          </button>
-          <button (click)="refazerQuiz()" class="btn btn-secondary">
-            Refazer Este Nível
-          </button>
+          <div class="score-display">
+            <div class="score-circle">
+              <span class="score-number">{{ resultado?.pontuacao || 0 }}</span>
+              <span class="score-total">/ {{ totalPerguntas }}</span>
+            </div>
+            <p class="score-percentage">{{ pontuacaoPercentual }}%</p>
+          </div>
+
+          <p class="result-message">{{ resultado?.mensagem || 'Resultado não disponível' }}</p>
+
+          <div class="feedback" [ngClass]="feedbackClass">
+            <p>{{ feedback }}</p>
+          </div>
+
+          <div class="action-buttons">
+            <button (click)="voltarNiveis()" class="btn btn-primary">
+              Escolher Outro Nível
+            </button>
+            <button (click)="refazerQuiz()" class="btn btn-secondary">
+              Refazer Este Nível
+            </button>
+          </div>
         </div>
       </div>
     </div>
   `,
   styles: [`
     .result-container {
+      min-height: 100vh;
+      background: #1a202c;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .result-header {
+      padding: 25px;
+      background: #2d3748;
+      border-bottom: 1px solid #4a5568;
+    }
+
+    .header-content {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .back-btn {
+      background: #3182ce;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .back-btn:hover {
+      background: #2c5282;
+    }
+
+    .back-btn span {
+      font-size: 1.2rem;
+    }
+
+    .header-info {
+      flex: 1;
+      text-align: center;
+      color: white;
+    }
+
+    .header-info h1 {
+      font-size: 1.5rem;
+      margin: 0;
+      font-weight: 500;
+    }
+
+    .result-content {
+      flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 80vh;
-      padding: 20px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 40px 20px;
     }
 
     .result-card {
-      background: white;
-      border-radius: 20px;
+      background: #2d3748;
+      border: 1px solid #4a5568;
+      border-radius: 16px;
       padding: 40px;
       text-align: center;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
       max-width: 500px;
       width: 100%;
     }
@@ -69,35 +138,29 @@ import { ResultadoQuizDTO } from '../../models';
       margin-bottom: 20px;
     }
 
-    h1 {
-      color: #374151;
-      margin-bottom: 30px;
+    h2 {
+      color: white;
       font-size: 2rem;
-    }
-
-    .score-display {
+      font-weight: 500;
       margin-bottom: 30px;
     }
 
     .score-circle {
-      display: inline-block;
       width: 120px;
       height: 120px;
       border-radius: 50%;
-      background: linear-gradient(45deg, #6B46C1, #8B5CF6);
+      background: linear-gradient(45deg, #3182ce, #667eea);
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-      margin-bottom: 15px;
-      box-shadow: 0 8px 20px rgba(107, 70, 193, 0.3);
+      justify-content: center;
+      margin: 0 auto 20px;
     }
 
     .score-number {
       font-size: 2.5rem;
       font-weight: bold;
       color: white;
-      line-height: 1;
     }
 
     .score-total {
@@ -108,14 +171,14 @@ import { ResultadoQuizDTO } from '../../models';
     .score-percentage {
       font-size: 1.5rem;
       font-weight: 600;
-      color: #6B46C1;
+      color: #3182ce;
       margin: 0;
     }
 
     .result-message {
-      font-size: 1.2rem;
-      color: #6B7280;
-      margin-bottom: 25px;
+      color: #a0aec0;
+      font-size: 1.1rem;
+      margin: 20px 0;
     }
 
     .feedback {
@@ -123,24 +186,25 @@ import { ResultadoQuizDTO } from '../../models';
       border-radius: 12px;
       margin-bottom: 30px;
       font-weight: 500;
+      border: 1px solid;
     }
 
     .feedback.excellent {
-      background: #ECFDF5;
-      color: #065F46;
-      border: 1px solid #A7F3D0;
+      background: #1a365d;
+      color: #63b3ed;
+      border-color: #3182ce;
     }
 
     .feedback.good {
-      background: #FEF3C7;
-      color: #92400E;
-      border: 1px solid #FCD34D;
+      background: #2d3748;
+      color: #fbb6ce;
+      border-color: #ed64a6;
     }
 
     .feedback.needs-improvement {
-      background: #FEF2F2;
-      color: #991B1B;
-      border: 1px solid #FECACA;
+      background: #2d3748;
+      color: #fc8181;
+      border-color: #e53e3e;
     }
 
     .action-buttons {
@@ -152,48 +216,32 @@ import { ResultadoQuizDTO } from '../../models';
 
     .btn {
       padding: 12px 24px;
-      border: none;
       border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 600;
+      font-weight: 500;
       cursor: pointer;
       transition: all 0.2s ease;
       min-width: 160px;
     }
 
     .btn-primary {
-      background: #6B46C1;
+      background: #3182ce;
       color: white;
+      border: none;
     }
 
     .btn-primary:hover {
-      background: #553C9A;
-      transform: translateY(-1px);
+      background: #2c5282;
     }
 
     .btn-secondary {
-      background: #F3F4F6;
-      color: #374151;
-      border: 1px solid #D1D5DB;
+      background: transparent;
+      color: #a0aec0;
+      border: 1px solid #4a5568;
     }
 
     .btn-secondary:hover {
-      background: #E5E7EB;
-      transform: translateY(-1px);
-    }
-
-    @media (max-width: 600px) {
-      .result-card {
-        padding: 30px 20px;
-      }
-
-      .action-buttons {
-        flex-direction: column;
-      }
-
-      .btn {
-        width: 100%;
-      }
+      border-color: #3182ce;
+      color: white;
     }
   `]
 })
@@ -222,9 +270,9 @@ export class QuizResultComponent {
     if (percentual >= 80) {
       return 'Excelente! Você domina bem esse nível de LIBRAS!';
     } else if (percentual >= 60) {
-      return 'Muito bem! Continue praticando para melhorar ainda mais.';
+      return 'Você precisa acerta pelo menos 4 para desbloquear o proximo nivel.';
     } else {
-      return 'Continue estudando! A prática leva à perfeição.';
+      return 'Você precisa acerta pelo menos 4 para desbloquear o proximo nivel.';
     }
   }
 

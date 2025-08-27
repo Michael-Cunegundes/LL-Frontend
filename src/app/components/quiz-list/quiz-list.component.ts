@@ -67,8 +67,8 @@ export class QuizListComponent implements OnInit {
         opcoes: [
           { texto: undefined, imagemUrl: '/images/desculpa2.png' },
           { texto: undefined, imagemUrl: '/images/idade.png' },
-          { texto: undefined, imagemUrl: '/images/tchau.png' },
-          { texto: undefined, imagemUrl: '/images/bomdia.png' }
+          { texto: undefined, imagemUrl: '/images/tchau1.png' },
+          { texto: undefined, imagemUrl: '/images/bomdia4.png' }
         ] as OptionDTO[],
         indiceCorreto: 0
       },
@@ -77,10 +77,10 @@ export class QuizListComponent implements OnInit {
         tipo: 'TEXTO_PARA_IMAGEM' as TipoPergunta,
         prompt: ['Eu'],
         opcoes: [
-          { texto: undefined, imagemUrl: '/images/eu.png' },
-          { texto: undefined, imagemUrl: '/images/mim.png' },
-          { texto: undefined, imagemUrl: '/images/obrigado.png' },
-          { texto: undefined, imagemUrl: '/images/sol.png' }
+          { texto: undefined, imagemUrl: '/images/eu1.png' },
+          { texto: undefined, imagemUrl: '/images/ir1.png' },
+          { texto: undefined, imagemUrl: '/images/trem1.png' },
+          { texto: undefined, imagemUrl: '/images/carro1.png' }
         ] as OptionDTO[],
         indiceCorreto: 0
       }
