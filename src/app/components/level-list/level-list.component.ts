@@ -1,7 +1,21 @@
 // src/app/components/level-list/level-list.component.ts
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
+import { SessionService } from '../../services/session.service';
+
+interface NivelInfo {
+  numero: number;
+  nome: string;
+  emoji: string;
+  descricao: string;
+  totalPerguntas: number;
+  disponivel: boolean;
+  completado: boolean;
+  pontuacao?: number;
+  emBreve?: boolean;
+}
 
 @Component({
   selector: 'level-list',
@@ -9,169 +23,186 @@ import { RouterModule } from '@angular/router';
   imports: [CommonModule, RouterModule],
   template: `
     <div class="main-container">
-      <!-- Lado Esquerdo - Níveis -->
-      <div class="levels-section">
-        <header class="app-header">
-          <h1>LibraLingo</h1>
-          <p class="subtitle">Escolha seu nível:</p>
-        </header>
+      <div class="content-wrapper">
+        <!-- Lado Esquerdo - Níveis -->
+        <div class="levels-section">
+          <header class="app-header">
+            <h1>LibraLingo</h1>
+            <p class="subtitle">MVP - Escolha seu nível:</p>
+            <div class="mvp-info">
+              <small>💡 Progresso resetado a cada sessão</small>
+              <button class="reset-btn" (click)="resetarProgresso()" title="Resetar progresso">
+                🔄 Resetar
+              </button>
+            </div>
+          </header>
 
-        <div class="levels-stack">
-          <div *ngFor="let nivel of niveis; let i = index"
-               class="level-item"
-               [class.available]="nivel.disponivel"
-               [class.locked]="!nivel.disponivel"
-               [style.animation-delay]="(i * 0.1) + 's'">
+          <div class="levels-stack">
+            <div *ngFor="let nivel of niveis; let i = index"
+                 class="level-item"
+                 [class.available]="nivel.disponivel && !nivel.emBreve"
+                 [class.locked]="!nivel.disponivel || nivel.emBreve"
+                 [class.completed]="nivel.completado"
+                 [class.em-breve]="nivel.emBreve"
+                 [style.animation-delay]="(i * 0.1) + 's'">
 
-            <div class="level-content">
-              <div class="level-icon">
-                <span *ngIf="nivel.disponivel">{{ nivel.emoji }}</span>
-                <span *ngIf="!nivel.disponivel">🔒</span>
+              <div class="level-content">
+                <!-- Ícone do nível -->
+                <div class="level-icon">
+                  <span *ngIf="nivel.disponivel && !nivel.emBreve">{{ nivel.emoji }}</span>
+                  <span *ngIf="!nivel.disponivel && !nivel.emBreve">🔒</span>
+                  <span *ngIf="nivel.emBreve">⏳</span>
+                </div>
+
+                <!-- Informações do nível -->
+                <div class="level-info">
+                  <h3>{{ nivel.nome }}</h3>
+                  <p>{{ nivel.descricao }}</p>
+
+                  <!-- Status do nível -->
+                  <div class="level-status">
+                    <div *ngIf="nivel.completado && nivel.pontuacao !== undefined" class="completion-info">
+                      <span class="score">{{ nivel.pontuacao }}/{{ nivel.totalPerguntas }}</span>
+                      <span class="percentage">({{ getPercentual(nivel.pontuacao!, nivel.totalPerguntas) }}%)</span>
+                      <span class="status-icon" [innerHTML]="getStatusIcon(nivel.pontuacao!, nivel.totalPerguntas)"></span>
+                    </div>
+
+                    <div *ngIf="!nivel.completado && nivel.disponivel && !nivel.emBreve" class="level-stats">
+                      <span class="questions-count">{{ nivel.totalPerguntas }} perguntas</span>
+                    </div>
+
+                    <div *ngIf="!nivel.disponivel && !nivel.emBreve" class="locked-message">
+                      <span>Complete o nível anterior com 4+ acertos</span>
+                    </div>
+
+                    <div *ngIf="nivel.emBreve" class="coming-soon-message">
+                      <span>Em desenvolvimento</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Ação do nível -->
+                <div class="level-action">
+                  <button
+                    *ngIf="nivel.disponivel && !nivel.emBreve"
+                    class="start-btn"
+                    [class.replay]="nivel.completado"
+                    [routerLink]="['/quiz']"
+                    [queryParams]="{level: nivel.numero}">
+                    {{ nivel.completado ? 'Jogar novamente' : 'Começar' }}
+                  </button>
+
+                  <button
+                    *ngIf="!nivel.disponivel && !nivel.emBreve"
+                    class="locked-btn"
+                    disabled>
+                    Bloqueado
+                  </button>
+
+                  <button
+                    *ngIf="nivel.emBreve"
+                    class="coming-soon-btn"
+                    disabled>
+                    Em breve
+                  </button>
+                </div>
               </div>
+            </div>
+          </div>
+        </div>
 
-              <div class="level-info">
-                <h3>Nível {{ nivel.numero }}</h3>
-                <p>{{ nivel.descricao }}</p>
+        <!-- Lado Direito - Hero Section -->
+        <div class="hero-section">
+          <div class="hero-content">
+            <!-- Estatísticas (se houver progresso) -->
+            <div class="progress-stats" *ngIf="estatisticas">
+              <h2>Seu Progresso Atual</h2>
+              <div class="stats-grid">
+                <div class="stat-item">
+                  <span class="stat-number">{{ estatisticas.niveisCompletados }}</span>
+                  <span class="stat-label">Níveis feitos</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-number">{{ estatisticas.totalAcertos }}</span>
+                  <span class="stat-label">Total de acertos</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-number">{{ estatisticas.mediaPercentual }}%</span>
+                  <span class="stat-label">Média</span>
+                </div>
+              </div>
+            </div>
 
-                <div class="level-stats" *ngIf="nivel.disponivel">
-                  <span class="questions-count">{{ nivel.totalPerguntas }} perguntas</span>
+            <!-- Logo -->
+            <div class="libras-demo">
+              <div class="logo-container">
+                <div class="logo-circle">
+                  <span class="logo-hands">🤟</span>
+                </div>
+                <div class="logo-text">LibraLingo</div>
+                <div class="mvp-badge">MVP</div>
+              </div>
+            </div>
+
+            <div class="hero-text">
+              <h2>Aprenda LIBRAS</h2>
+              <p class="intro-text">
+                MVP com 2 níveis funcionais. Complete o Nível 1 com pelo menos 4 acertos
+                para desbloquear o Nível 2!
+              </p>
+
+              <div class="benefits">
+                <div class="benefit">
+                  <span class="benefit-icon">📚</span>
+                  <span>2 níveis completos</span>
+                </div>
+                <div class="benefit">
+                  <span class="benefit-icon">🔓</span>
+                  <span>Sistema de desbloqueio</span>
+                </div>
+                <div class="benefit">
+                  <span class="benefit-icon">📊</span>
+                  <span>Feedback imediato</span>
+                </div>
+                <div class="benefit">
+                  <span class="benefit-icon">⚡</span>
+                  <span>Progresso em memória</span>
                 </div>
               </div>
 
-              <div class="level-action">
-                <button
-                  class="start-btn"
-                  [disabled]="!nivel.disponivel"
-                  [routerLink]="['/quiz']"
-                  [queryParams]="{level: nivel.numero}"
-                  *ngIf="nivel.disponivel">
-                  Começar
-                </button>
-
-                <button
-                  class="locked-btn"
-                  disabled
-                  *ngIf="!nivel.disponivel">
-                  Bloqueado
-                </button>
+              <div class="mvp-note">
+                <p><strong>Nota MVP:</strong> O progresso é resetado quando você sair do site.
+                Perfeito para testes e demonstrações rápidas!</p>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Seção Central - Por que aprender LIBRAS? -->
-      <div class="central-section">
-        <div class="central-content">
-          <div class="section-header">
-            <h2>Por que aprender LIBRAS?</h2>
-            <p>Descubra a importância da Língua Brasileira de Sinais</p>
-          </div>
-
-          <div class="info-cards">
-            <div class="info-card"
-                 *ngFor="let info of informacoes; let i = index"
-                 [style.animation-delay]="(i * 0.2) + 's'">
-              <div class="info-icon">
-                <span>{{ info.icone }}</span>
-              </div>
-              <div class="info-content">
-                <h3>{{ info.titulo }}</h3>
-                <p>{{ info.descricao }}</p>
-                <div class="info-stat" *ngIf="info.estatistica">
-                  <span class="stat-number">{{ info.estatistica.numero }}</span>
-                  <span class="stat-label">{{ info.estatistica.label }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="quick-facts">
-            <h3>Você sabia?</h3>
-            <div class="facts-grid">
-              <div class="fact-item" *ngFor="let fato of fatos; let i = index">
-                <span class="fact-icon">{{ fato.icone }}</span>
-                <span class="fact-text">{{ fato.texto }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Lado Direito - Hero Section -->
-      <div class="hero-section">
-        <div class="hero-content">
-          <div class="libras-demo">
-            <div class="logo-container">
-              <div class="logo-circle">
-                <span class="logo-hands">🤟</span>
-              </div>
-              <div class="logo-text">LibraLingo</div>
-            </div>
-          </div>
-
-          <div class="hero-text">
-            <h2>Aprenda Libras</h2>
-            <p class="intro-text">
-              Aprender Libras é essencial para promover inclusão e acessibilidade
-              na nossa sociedade.
-            </p>
-
-            <div class="benefits">
-              <div class="benefit">
-                <span class="benefit-icon">🤝</span>
-                <span>Comunicação mais justa e inclusiva</span>
-              </div>
-              <div class="benefit">
-                <span class="benefit-icon">🧠</span>
-                <span>Desenvolvimento cognitivo e empatia</span>
-              </div>
-              <div class="benefit">
-                <span class="benefit-icon">💼</span>
-                <span>Oportunidades no mercado de trabalho</span>
-              </div>
-              <div class="benefit">
-                <span class="benefit-icon">⚖️</span>
-                <span>Sociedade mais justa e humana</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Disclaimer -->
-      <div class="disclaimer">
-        <div class="disclaimer-content">
-          <div class="disclaimer-text">
-            <strong></strong> Projeto educacional desenvolvido por não fluente em LIBRAS.
-            Para aprendizado profissional, consulte instrutores certificados.
           </div>
         </div>
       </div>
     </div>
   `,
   styles: [`
+    /* Estilos base mantidos do componente anterior */
     .main-container {
-      height: 100vh;
+      min-height: 100vh;
       background: #1a202c;
       display: flex;
-      width: 100%;
-      position: relative;
-      overflow: hidden;
+      flex-direction: column;
     }
 
-    /* === LADO ESQUERDO - NÍVEIS === */
+    .content-wrapper {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Header com info MVP */
     .levels-section {
       flex: 1;
       padding: 20px 40px;
       display: flex;
       flex-direction: column;
-      position: relative;
-      z-index: 1;
     }
 
     .app-header {
-      text-align: left;
       color: white;
       margin-bottom: 40px;
     }
@@ -180,7 +211,6 @@ import { RouterModule } from '@angular/router';
       font-size: 4rem;
       margin-bottom: 10px;
       font-weight: 300;
-      text-shadow: none;
       color: #FFFFFF;
       letter-spacing: -2px;
     }
@@ -193,6 +223,38 @@ import { RouterModule } from '@angular/router';
       font-weight: 300;
     }
 
+    .mvp-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-top: 15px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .mvp-info small {
+      color: #A0AEC0;
+      flex: 1;
+    }
+
+    .reset-btn {
+      background: #3182ce;
+      border: none;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.2s ease;
+    }
+
+    .reset-btn:hover {
+      background: #2c5282;
+    }
+
+    /* Níveis */
     .levels-stack {
       flex: 1;
       display: flex;
@@ -202,38 +264,53 @@ import { RouterModule } from '@angular/router';
     }
 
     .level-item {
-      background: #2d3748;  /* ✅ Cards com fundo escuro */
+      background: #2d3748;
       border-radius: 12px;
       padding: 20px;
       transition: all 0.3s ease;
       position: relative;
       min-height: 80px;
-      border: 1px solid #4a5568;  /* ✅ Borda sutil */
+      border: 1px solid #4a5568;
       animation: slideInLeft 0.6s ease-out;
       animation-fill-mode: both;
     }
 
-    @keyframes slideInLeft {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
     .level-item.available:hover {
       transform: translateY(-2px);
-      background: #4a5568;  /* ✅ Hover mais claro */
+      background: #4a5568;
       border-color: #3182ce;
     }
 
     .level-item.locked {
       opacity: 0.5;
-      background: #2d3748;
+    }
+
+    .level-item.completed {
+      border-color: #48bb78;
+      background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+    }
+
+    .level-item.completed::after {
+      content: '✓';
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      color: #48bb78;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    /* ✅ Estilo para níveis "em breve" */
+    .level-item.em-breve {
+      opacity: 0.6;
+      background: #1a202c;
+      border-style: dashed;
       border-color: #4a5568;
+    }
+
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .level-content {
@@ -253,21 +330,44 @@ import { RouterModule } from '@angular/router';
     }
 
     .level-info h3 {
-      color: #FFFFFF;  /* ✅ Texto branco */
+      color: #FFFFFF;
       margin: 0 0 4px 0;
       font-size: 1.2rem;
       font-weight: 500;
     }
 
     .level-info p {
-      color: #A0AEC0;  /* ✅ Texto cinza claro */
+      color: #A0AEC0;
       margin: 0 0 8px 0;
       font-size: 0.9rem;
       line-height: 1.4;
     }
 
+    /* Status dos níveis */
+    .level-status {
+      font-size: 0.85rem;
+    }
+
+    .completion-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #63B3ED;
+      font-weight: 500;
+    }
+
+    .score {
+      background: #4a5568;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: white;
+    }
+
+    .percentage { color: #A0AEC0; }
+    .status-icon { font-size: 1rem; }
+
     .level-stats {
-      background: #4a5568;  /* ✅ Background mais escuro */
+      background: #4a5568;
       padding: 4px 10px;
       border-radius: 8px;
       display: inline-block;
@@ -275,17 +375,27 @@ import { RouterModule } from '@angular/router';
     }
 
     .questions-count {
-      color: #63B3ED;  /* ✅ Azul claro */
+      color: #63B3ED;
       font-weight: 400;
       font-size: 0.8rem;
     }
 
+    .locked-message, .coming-soon-message {
+      color: #fc8181;
+      font-style: italic;
+    }
+
+    .coming-soon-message {
+      color: #fbb6ce;
+    }
+
+    /* Botões de ação */
     .level-action {
-      min-width: 100px;
+      min-width: 120px;
     }
 
     .start-btn {
-      background: #3182ce;  /* ✅ Azul similar à imagem */
+      background: #3182ce;
       color: #FFFFFF;
       border: none;
       padding: 10px 20px;
@@ -298,10 +408,9 @@ import { RouterModule } from '@angular/router';
       min-height: 40px;
     }
 
-    .start-btn:hover:not(:disabled) {
-      background: #2c5282;
-      transform: translateY(-1px);
-    }
+    .start-btn:hover { background: #2c5282; transform: translateY(-1px); }
+    .start-btn.replay { background: #48bb78; }
+    .start-btn.replay:hover { background: #38a169; }
 
     .locked-btn {
       background: #4a5568;
@@ -310,179 +419,30 @@ import { RouterModule } from '@angular/router';
       padding: 10px 20px;
       border-radius: 8px;
       font-size: 0.9rem;
-      font-weight: 400;
       cursor: not-allowed;
       width: 100%;
       min-height: 40px;
     }
 
-    /* === SEÇÃO CENTRAL - POR QUE APRENDER LIBRAS === */
-    .central-section {
-      flex: 1.2;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      position: relative;
-      z-index: 1;
-    }
-
-    .central-content {
-      max-width: 500px;
-      margin: 0 auto;
-      color: white;
-    }
-
-    .section-header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .section-header h2 {
-      font-size: 2rem;
-      font-weight: 300;
-      margin-bottom: 8px;
-      color: #FFFFFF;
-    }
-
-    .section-header p {
-      font-size: 1rem;
-      color: #A0AEC0;
-      opacity: 0.8;
-    }
-
-    .info-cards {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      margin-bottom: 30px;
-    }
-
-    .info-card {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 20px;
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-      transition: all 0.3s ease;
-      animation: fadeInUp 0.6s ease-out;
-      animation-fill-mode: both;
-    }
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .info-card:hover {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(99, 179, 237, 0.3);
-      transform: translateY(-2px);
-    }
-
-    .info-icon {
-      font-size: 2rem;
-      min-width: 50px;
-      text-align: center;
-      opacity: 0.9;
-    }
-
-    .info-content h3 {
-      font-size: 1.1rem;
-      font-weight: 500;
-      margin: 0 0 8px 0;
-      color: #FFFFFF;
-    }
-
-    .info-content p {
-      font-size: 0.9rem;
-      color: #CBD5E1;
-      line-height: 1.5;
-      margin: 0 0 10px 0;
-    }
-
-    .info-stat {
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-    }
-
-    .stat-number {
-      font-size: 1.4rem;
-      font-weight: 600;
-      color: #63B3ED;
-    }
-
-    .stat-label {
-      font-size: 0.8rem;
-      color: #A0AEC0;
-      opacity: 0.8;
-    }
-
-    .quick-facts {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 20px;
-    }
-
-    .quick-facts h3 {
-      font-size: 1.2rem;
-      font-weight: 500;
-      color: #FFFFFF;
-      margin: 0 0 16px 0;
-      text-align: center;
-    }
-
-    .facts-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .fact-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 12px;
-      background: rgba(255, 255, 255, 0.05);
+    .coming-soon-btn {
+      background: #553c9a;
+      color: #E9D8FD;
+      border: 1px solid #805ad5;
+      padding: 10px 20px;
       border-radius: 8px;
-      transition: all 0.2s ease;
+      font-size: 0.9rem;
+      cursor: not-allowed;
+      width: 100%;
+      min-height: 40px;
     }
 
-    .fact-item:hover {
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .fact-icon {
-      font-size: 1.1rem;
-      min-width: 20px;
-      text-align: center;
-    }
-
-    .fact-text {
-      font-size: 0.85rem;
-      color: #CBD5E1;
-      line-height: 1.4;
-    }
-
-    /* === LADO DIREITO - HERO === */
+    /* Hero section */
     .hero-section {
       flex: 1;
       padding: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
-      z-index: 1;
     }
 
     .hero-content {
@@ -491,6 +451,46 @@ import { RouterModule } from '@angular/router';
       max-width: 450px;
     }
 
+    /* Estatísticas */
+    .progress-stats {
+      margin-bottom: 30px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .progress-stats h2 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: #FFFFFF;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      display: block;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #63B3ED;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: #A0AEC0;
+      opacity: 0.8;
+    }
+
+    /* Logo */
     .libras-demo {
       margin-bottom: 30px;
     }
@@ -500,6 +500,7 @@ import { RouterModule } from '@angular/router';
       flex-direction: column;
       align-items: center;
       gap: 15px;
+      position: relative;
     }
 
     .logo-circle {
@@ -534,6 +535,18 @@ import { RouterModule } from '@angular/router';
       letter-spacing: 1px;
     }
 
+    .mvp-badge {
+      background: #ed8936;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
     .hero-text h2 {
       font-size: 2.5rem;
       margin-bottom: 20px;
@@ -556,6 +569,7 @@ import { RouterModule } from '@angular/router';
       display: grid;
       gap: 12px;
       text-align: left;
+      margin-bottom: 25px;
     }
 
     .benefit {
@@ -584,73 +598,38 @@ import { RouterModule } from '@angular/router';
       opacity: 0.9;
     }
 
-    /* === DISCLAIMER === */
-    .disclaimer {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      max-width: 280px;
-      z-index: 1000;
-      animation: slideInLeft 1s ease-out 2s both;
-    }
-
-    .disclaimer-content {
-      background: rgba(45, 55, 72, 0.95);  /* ✅ Fundo escuro */
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(74, 85, 104, 0.6);
+    .mvp-note {
+      background: rgba(237, 137, 54, 0.1);
+      border: 1px solid rgba(237, 137, 54, 0.3);
       border-radius: 8px;
-      padding: 12px 14px;
-      color: #CBD5E1;
-      font-size: 0.75rem;
-      line-height: 1.3;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      padding: 15px;
+      text-align: left;
     }
 
-    .disclaimer-text strong {
-      color: #63B3ED;  /* ✅ Azul claro */
-      font-weight: 500;
+    .mvp-note p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #FBB6CE;
+      line-height: 1.4;
     }
 
-    /* === RESPONSIVIDADE === */
+    .mvp-note strong {
+      color: #FED7E2;
+    }
+
+    /* Responsividade */
     @media (max-width: 1024px) {
-      .main-container {
+      .content-wrapper {
         flex-direction: column;
       }
 
-      .levels-section,
-      .central-section,
-      .hero-section {
+      .levels-section, .hero-section {
         flex: none;
         padding: 30px 20px;
       }
 
-      .levels-stack {
-        max-width: 100%;
-      }
-
-      .central-content {
-        max-width: 100%;
-      }
-
-      .logo-circle {
-        width: 180px;
-        height: 180px;
-      }
-
-      .logo-hands {
-        font-size: 3.5rem;
-      }
-
-      .logo-text {
-        font-size: 1.6rem;
-      }
-
-      .hero-text h2 {
-        font-size: 2.2rem;
-      }
-
-      .app-header h1 {
-        font-size: 3rem;
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
 
@@ -659,150 +638,65 @@ import { RouterModule } from '@angular/router';
         font-size: 2.5rem;
       }
 
-      .hero-text h2 {
-        font-size: 1.8rem;
+      .stats-grid {
+        grid-template-columns: 1fr;
       }
 
-      .level-content {
-        gap: 12px;
+      .stat-number {
+        font-size: 1.5rem;
       }
 
-      .level-info h3 {
-        font-size: 1.1rem;
-      }
-
-      .level-info p {
-        font-size: 0.85rem;
-      }
-
-      .logo-circle {
-        width: 150px;
-        height: 150px;
-      }
-
-      .logo-hands {
-        font-size: 3rem;
-      }
-
-      .logo-text {
-        font-size: 1.4rem;
-      }
-
-      .benefits {
+      .mvp-info {
+        flex-direction: column;
+        align-items: flex-start;
         gap: 10px;
-      }
-
-      .benefit {
-        padding: 10px 12px;
-        font-size: 0.9rem;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .disclaimer {
-        bottom: 15px;
-        left: 15px;
-        right: 15px;
-        max-width: none;
-      }
-
-      .disclaimer-content {
-        font-size: 0.7rem;
-        padding: 10px 12px;
       }
     }
   `]
 })
-export class LevelListComponent {
-  niveis = [
-    {
-      numero: 1,
-      emoji: '👋',
-      descricao: 'Cumprimentos essenciais',
-      totalPerguntas: 5,
-      disponivel: true
-    },
-    {
-      numero: 2,
-      emoji: '👋',
-      descricao: 'Numeros',
-      totalPerguntas: 5,
-      disponivel: false
-    },
-    {
-      numero: 3,
-      emoji: '👨‍👩‍👧‍👦',
-      descricao: 'Família',
-      totalPerguntas: 5,
-      disponivel: false
-    },
-    {
-      numero: 4,
-      emoji: '🍎',
-      descricao: 'Alimentos básicos',
-      totalPerguntas: 5,
-      disponivel: false
-    },
-    {
-      numero: 5,
-      emoji: '🏠',
-      descricao: 'Lugares importantes',
-      totalPerguntas: 5,
-      disponivel: false
-    }
-  ];
+export class LevelListComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
 
-  informacoes = [
-    {
-      icone: '🤲',
-      titulo: 'Inclusão Social',
-      descricao: 'LIBRAS é a 2ª língua oficial do Brasil, essencial para incluir a comunidade surda.',
-      estatistica: {
-        numero: '10,7M',
-        label: 'pessoas com deficiência auditiva no Brasil'
-      }
-    },
-    {
-      icone: '🧠',
-      titulo: 'Desenvolvimento Cognitivo',
-      descricao: 'Aprender uma língua visual-espacial desenvolve novas áreas do cérebro.',
-      estatistica: {
-        numero: '2002',
-        label: 'ano de reconhecimento oficial'
-      }
-    },
-    {
-      icone: '💼',
-      titulo: 'Oportunidades Profissionais',
-      descricao: 'Mercado em crescimento para intérpretes e profissionais capacitados.',
-      estatistica: {
-        numero: '+50%',
-        label: 'crescimento na demanda'
-      }
-    }
-  ];
+  niveis: NivelInfo[] = [];
+  estatisticas: any = null;
 
-  fatos = [
-    {
-      icone: '✋',
-      texto: 'LIBRAS possui gramática própria e estrutura linguística completa'
-    },
-    {
-      icone: '🏫',
-      texto: 'Disciplina obrigatória nos cursos de licenciatura desde 2005'
-    },
-    {
-      icone: '🌍',
-      texto: 'Cada país tem sua própria língua de sinais'
-    },
-    {
-      icone: '👥',
-      texto: 'Comunidade surda tem cultura e identidade próprias'
-    }
-  ];
+  constructor(private sessionService: SessionService) {}
 
-  // Método para lidar com erro de carregamento da imagem (mantido para compatibilidade)
-  onImageError(event: Event) {
-    console.warn('Logo agora é CSS - método mantido para compatibilidade');
+  ngOnInit() {
+    // Carregar níveis e escutar mudanças
+    this.sessionService.progresso$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.atualizarDados();
+      });
+
+    this.atualizarDados();
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private atualizarDados(): void {
+    this.niveis = this.sessionService.getNiveisComStatus();
+    this.estatisticas = this.sessionService.getEstatisticas();
+  }
+
+  public getPercentual(acertos: number, total: number): number {
+    return Math.round((acertos / total) * 100);
+  }
+
+  public getStatusIcon(acertos: number, total: number): string {
+    const percentual = this.getPercentual(acertos, total);
+    if (percentual >= 80) return '🌟';
+    if (percentual >= 60) return '👍';
+    return '📚';
+  }
+
+  public resetarProgresso(): void {
+    if (confirm('Resetar o progresso atual? (Útil para testar o MVP)')) {
+      this.sessionService.resetarProgresso();
+    }
   }
 }

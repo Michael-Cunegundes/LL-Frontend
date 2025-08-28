@@ -43,16 +43,21 @@
     <div class="question-container">
 
       <!-- Pergunta: Imagem para Texto -->
+      <!-- TRECHO ESPECÍFICO que precisa ser corrigido no seu quiz-list.component.html -->
+
+      <!-- Pergunta: Imagem para Texto -->
       <div *ngIf="currentQuestion.tipo === 'IMAGEM_PARA_TEXTO'" class="question-card img-to-text">
         <div class="question-images">
-          <img *ngFor="let promptUrl of currentQuestion.prompt"
-               [src]="promptUrl"
-               alt="Sinal em Libras"
-               class="libras-image">
+          <!-- ✅ CORRIGIDO: Iterar sobre todas as imagens do prompt -->
+          <img *ngFor="let imagemUrl of currentQuestion.prompt"
+               [src]="imagemUrl"
+               [alt]="'Sinal em Libras - Imagem ' + (currentQuestion.prompt.indexOf(imagemUrl) + 1)"
+               class="libras-image"
+               (error)="onImageError($event, imagemUrl)">
         </div>
 
         <div class="question-text">
-          <h2>Qual o significado deste sinal?</h2>
+          <h2>Qual o significado dest{{ currentQuestion.prompt.length > 1 ? 'es sinais' : 'e sinal' }}?</h2>
         </div>
 
         <div class="options-grid">

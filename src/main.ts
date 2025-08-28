@@ -1,4 +1,4 @@
-// src/main.ts
+// src/main.ts - Não precisa alterar, SessionService já é @Injectable({ providedIn: 'root' })
 import { bootstrapApplication } from '@angular/platform-browser';
 import { importProvidersFrom } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -14,3 +14,5 @@ bootstrapApplication(AppComponent, {
     )
   ]
 }).catch(err => console.error(err));
+
+// ✅ O SessionService é automaticamente disponibilizado porque tem @Injectable({ providedIn: 'root' })
