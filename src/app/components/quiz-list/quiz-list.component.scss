@@ -103,7 +103,6 @@
   justify-items: center;
   align-items: center;
 
-  /* Layout responsivo baseado na quantidade de imagens */
   &:has(img:nth-child(2)):not(:has(img:nth-child(3))) {
     /* 2 imagens: lado a lado */
     grid-template-columns: repeat(2, 1fr);
@@ -124,6 +123,11 @@
     max-width: 400px;
     margin: 0 auto 20px;
   }
+}
+
+.image-container {
+  position: relative;
+  display: inline-block;
 }
 
 .image-wrapper {

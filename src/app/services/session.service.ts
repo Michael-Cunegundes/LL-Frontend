@@ -22,7 +22,7 @@ export class SessionService {
   // Configuração dos níveis do MVP
   private readonly NIVEIS_CONFIG = [
     { numero: 1, nome: 'Cumprimentos', emoji: '👋', descricao: 'Cumprimentos básicos em LIBRAS', totalPerguntas: 5 },
-    { numero: 2, nome: 'Números', emoji: '🔢', descricao: 'Números de 1 a 5 em LIBRAS', totalPerguntas: 5 },
+    { numero: 2, nome: 'Conversas Cotidianas', emoji: '🗣️', descricao: 'Palavras mais usadas em libras', totalPerguntas: 5 },
     { numero: 3, nome: 'Família', emoji: '👨‍👩‍👧‍👦', descricao: 'Sinais da família (Em breve)', totalPerguntas: 5 },
     { numero: 4, nome: 'Alimentos', emoji: '🍎', descricao: 'Comidas e bebidas (Em breve)', totalPerguntas: 5 },
     { numero: 5, nome: 'Lugares', emoji: '🏠', descricao: 'Lugares importantes (Em breve)', totalPerguntas: 5 }

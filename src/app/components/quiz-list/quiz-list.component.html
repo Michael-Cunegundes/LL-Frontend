@@ -47,18 +47,24 @@
 
       <!-- Pergunta: Imagem para Texto -->
       <div *ngIf="currentQuestion.tipo === 'IMAGEM_PARA_TEXTO'" class="question-card img-to-text">
-        <div class="question-images">
-          <!-- ✅ CORRIGIDO: Iterar sobre todas as imagens do prompt -->
-          <img *ngFor="let imagemUrl of currentQuestion.prompt"
-               [src]="imagemUrl"
-               [alt]="'Sinal em Libras - Imagem ' + (currentQuestion.prompt.indexOf(imagemUrl) + 1)"
-               class="libras-image"
-               (error)="onImageError($event, imagemUrl)">
+        <div class="question-images" [class.multiple-images]="currentQuestion.prompt.length > 1">
+          <div *ngFor="let imagemUrl of currentQuestion.prompt; let i = index" class="image-container">
+
+            <div *ngIf="currentQuestion.prompt.length > 1" class="image-number">{{ i + 1 }}</div>
+
+
+            <img [src]="imagemUrl"
+                 [alt]="'Sinal em Libras - Imagem ' + (i + 1)"
+                 class="libras-image"
+                 (error)="onImageError($event, imagemUrl)">
+          </div>
+
+          <div *ngIf="currentQuestion.prompt.length > 1" class="sequence-hint">
+            <h2> Qual o significa dessa sequencia de sinais?</h2>
+          </div>
         </div>
 
-        <div class="question-text">
-          <h2>Qual o significado dest{{ currentQuestion.prompt.length > 1 ? 'es sinais' : 'e sinal' }}?</h2>
-        </div>
+
 
         <div class="options-grid">
           <label *ngFor="let opcao of currentQuestion.opcoes; let i = index"
