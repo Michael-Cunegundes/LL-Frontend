@@ -7,20 +7,11 @@
         <span>←</span> Voltar
       </button>
 
-<!--      <div class="progress-info">-->
-<!--        <h1>LibraLingo - Nível {{ level }}</h1>-->
-<!--        <div class="progress-bar">-->
-<!--          <div class="progress-fill" [style.width.%]="progress"></div>-->
-<!--        </div>-->
-<!--        <span class="progress-text">-->
-<!--          {{ currentQuestionIndex + 1 }} de {{ perguntas.length }}-->
-<!--        </span>-->
-<!--      </div>-->
       <div class="progress-info">
         <h1>LibraLingo - Nível {{ level }}</h1>
         <span class="progress-text">
-    {{ currentQuestionIndex + 1 }} de {{ perguntas.length }}
-  </span>
+          {{ currentQuestionIndex + 1 }} de {{ perguntas.length }}
+        </span>
       </div>
     </div>
   </header>
@@ -43,29 +34,29 @@
     <div class="question-container">
 
       <!-- Pergunta: Imagem para Texto -->
-      <!-- TRECHO ESPECÍFICO que precisa ser corrigido no seu quiz-list.component.html -->
-
-      <!-- Pergunta: Imagem para Texto -->
       <div *ngIf="currentQuestion.tipo === 'IMAGEM_PARA_TEXTO'" class="question-card img-to-text">
+
+        <!-- Texto da pergunta ANTES das imagens -->
+        <div class="question-header">
+          <h2 *ngIf="currentQuestion.prompt.length === 1">Qual o significado deste sinal?</h2>
+          <h2 *ngIf="currentQuestion.prompt.length > 1">Qual o significado dessa sequência de sinais?</h2>
+        </div>
+
+        <!-- Container das imagens -->
         <div class="question-images" [class.multiple-images]="currentQuestion.prompt.length > 1">
           <div *ngFor="let imagemUrl of currentQuestion.prompt; let i = index" class="image-container">
 
+            <!-- Número indicador apenas para múltiplas imagens -->
             <div *ngIf="currentQuestion.prompt.length > 1" class="image-number">{{ i + 1 }}</div>
-
 
             <img [src]="imagemUrl"
                  [alt]="'Sinal em Libras - Imagem ' + (i + 1)"
                  class="libras-image"
                  (error)="onImageError($event, imagemUrl)">
           </div>
-
-          <div *ngIf="currentQuestion.prompt.length > 1" class="sequence-hint">
-            <h2> Qual o significa dessa sequencia de sinais?</h2>
-          </div>
         </div>
 
-
-
+        <!-- Opções de resposta -->
         <div class="options-grid">
           <label *ngFor="let opcao of currentQuestion.opcoes; let i = index"
                  class="option-card"

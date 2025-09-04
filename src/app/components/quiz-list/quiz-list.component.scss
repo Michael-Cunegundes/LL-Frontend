@@ -1,3 +1,4 @@
+// src/app/components/quiz-list/quiz-list.component.scss
 .quiz-container {
   height: 100vh;
   background: #1a202c;
@@ -48,29 +49,13 @@
 
 .progress-info h1 {
   font-size: 1.5rem;
-  margin-bottom: 15px;
+  margin-bottom: 8px;
   font-weight: 500;
   color: white;
 }
 
-.progress-bar {
-  width: 100%;
-  height: 6px;
-  background: #4a5568;
-  border-radius: 3px;
-  overflow: hidden;
-  margin-bottom: 10px;
-}
-
-.progress-fill {
-  height: 100%;
-  background: #48bb78;
-  border-radius: 3px;
-  transition: width 0.3s ease;
-}
-
 .progress-text {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   color: #a0aec0;
 }
 
@@ -80,7 +65,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 15px;
+  padding: 20px;
+  overflow-y: auto;
 }
 
 .question-container {
@@ -91,71 +77,92 @@
 .question-card {
   background: white;
   border-radius: 20px;
-  padding: 40px;
+  padding: 30px 40px;
   text-align: center;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
+/* ✅ NOVO: Estilos para o header da pergunta */
+.question-header {
+  margin-bottom: 25px;
+
+  h2 {
+    font-size: 1.4rem;
+    color: #2d3748;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.4;
+  }
+}
+
+/* Container das imagens */
 .question-images {
-  margin-bottom: 20px; /* Reduzido de 30px */
+  margin-bottom: 30px;
   display: grid;
-  gap: 10px; /* Reduzido de 20px */
+  gap: 15px;
   justify-items: center;
   align-items: center;
 
-  &:has(img:nth-child(2)):not(:has(img:nth-child(3))) {
-    /* 2 imagens: lado a lado */
+  // Layout responsivo baseado no número de imagens
+  &:has(.image-container:nth-child(2)):not(:has(.image-container:nth-child(3))) {
     grid-template-columns: repeat(2, 1fr);
     max-width: 500px;
-    margin: 0 auto 20px;
+    margin: 0 auto 30px;
   }
 
-  &:has(img:nth-child(3)):not(:has(img:nth-child(4))) {
-    /* 3 imagens: grade 3x1 */
+  &:has(.image-container:nth-child(3)):not(:has(.image-container:nth-child(4))) {
     grid-template-columns: repeat(3, 1fr);
     max-width: 600px;
-    margin: 0 auto 20px;
+    margin: 0 auto 30px;
   }
 
-  &:has(img:nth-child(4)) {
-    /* 4+ imagens: grade 2x2 */
+  &:has(.image-container:nth-child(4)) {
     grid-template-columns: repeat(2, 1fr);
-    max-width: 400px;
-    margin: 0 auto 20px;
+    max-width: 500px;
+    margin: 0 auto 30px;
   }
 }
 
 .image-container {
   position: relative;
-  display: inline-block;
+  width: 100%;
+  max-width: 220px;
 }
 
-.image-wrapper {
-  position: relative;
-  display: inline-block;
-}
-
-.image-wrapper.multiple {
-  flex: 0 1 calc(50% - 10px); /* 2 imagens por linha */
-  max-width: 250px;
+/* Indicador numérico para sequências */
+.image-number {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  background: #3182ce;
+  color: white;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  z-index: 1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .libras-image {
   width: 100%;
-  height: 200px;
+  height: 180px;
   object-fit: contain;
   border-radius: 12px;
   border: 2px solid #e2e8f0;
   background: #f7fafc;
   padding: 10px;
   display: block;
+  transition: all 0.2s ease;
 }
 
-.hint {
-  color: #718096;
-  font-size: 0.9rem;
-  font-style: italic;
-  margin-top: 8px;
+.libras-image:hover {
+  border-color: #3182ce;
+  transform: scale(1.02);
 }
 
 .libras-image.error {
@@ -169,24 +176,13 @@
   padding: 20px;
 }
 
-.image-sequence {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  background: #3182ce;
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
+/* Pergunta de texto para imagem */
 .question-text {
   margin-bottom: 30px;
 }
 
 .question-text h2 {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   color: #2d3748;
   margin-bottom: 15px;
   font-weight: 600;
@@ -200,7 +196,7 @@
   padding: 15px 30px;
   border-radius: 12px;
   display: inline-block;
-  border: 1px solid #e2e8f0;
+  border: 2px solid #e2e8f0;
 }
 
 /* Opções de texto */
@@ -225,11 +221,13 @@
 .option-card:hover {
   border-color: #3182ce;
   background: #ebf8ff;
+  transform: translateY(-2px);
 }
 
 .option-card.selected {
   border-color: #3182ce;
   background: #ebf8ff;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
 }
 
 .option-card input[type="radio"] {
@@ -261,6 +259,7 @@
   color: #2d3748;
   font-size: 1rem;
   font-weight: 500;
+  text-align: left;
 }
 
 /* Opções de imagem */
@@ -283,11 +282,13 @@
 .image-option-card:hover {
   border-color: #3182ce;
   background: #ebf8ff;
+  transform: translateY(-2px);
 }
 
 .image-option-card.selected {
   border-color: #3182ce;
   background: #ebf8ff;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
 }
 
 .image-option-card input[type="radio"] {
@@ -313,7 +314,7 @@
 
 /* Navegação */
 .navigation {
-  padding: 25px;
+  padding: 20px;
   background: rgba(45, 55, 72, 0.95);
   display: flex;
   align-items: center;
@@ -338,6 +339,7 @@
 
 .nav-btn.primary:hover:not(:disabled) {
   background: #38a169;
+  transform: translateY(-1px);
 }
 
 .nav-btn.secondary {
@@ -382,7 +384,7 @@
   background: rgba(255, 255, 255, 0.7);
 }
 
-/* Estados de loading */
+/* Estados de loading e erro */
 .loading, .error, .no-questions {
   flex: 1;
   display: flex;
@@ -422,29 +424,45 @@
   border-radius: 8px;
   font-weight: 500;
   cursor: pointer;
+  margin-top: 20px;
 }
 
 .retry-btn:hover {
   background: #2c5282;
 }
 
+/* Responsividade */
 @media (max-width: 768px) {
-  .image-wrapper.multiple {
-    flex: 0 1 100%; /* 1 imagem por linha no mobile */
-    max-width: 200px;
+  .question-card {
+    padding: 20px;
   }
 
-  .question-card {
-    padding: 30px 20px;
+  .question-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .question-images {
+    &:has(.image-container:nth-child(2)) {
+      grid-template-columns: 1fr;
+      max-width: 250px;
+    }
   }
 
   .libras-image {
-    width: 150px;
     height: 150px;
   }
 
   .options-grid {
     grid-template-columns: 1fr;
     gap: 12px;
+  }
+
+  .image-options-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .target-word {
+    font-size: 1.5rem;
+    padding: 12px 20px;
   }
 }
