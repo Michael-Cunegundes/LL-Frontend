@@ -22,13 +22,13 @@ export class SessionService {
   private progressoSubject = new BehaviorSubject<Map<number, NivelProgresso>>(new Map());
   public progresso$ = this.progressoSubject.asObservable();
 
-  private readonly NIVEIS_CONFIG = [
-    { numero: 1, nome: 'Cumprimentos', emoji: '👋', descricao: 'Cumprimentos básicos em LIBRAS', totalPerguntas: 5 },
-    { numero: 2, nome: 'Conversas Cotidianas', emoji: '🗣️', descricao: 'Palavras mais usadas em libras', totalPerguntas: 5 },
-    { numero: 3, nome: 'Família', emoji: '👨‍👩‍👧‍👦', descricao: 'Sinais da família', totalPerguntas: 5 },
-    { numero: 4, nome: 'Alimentos', emoji: '🍎', descricao: 'Comidas e bebidas', totalPerguntas: 5 },
-    { numero: 5, nome: 'Lugares', emoji: '🏠', descricao: 'Lugares importantes', totalPerguntas: 5 }
-  ];
+private readonly NIVEIS_CONFIG = [
+  { numero: 1, nome: 'Cumprimentos Básicos', emoji: '👋', descricao: 'Cumprimentos básicos em LIBRAS', totalPerguntas: 5 },
+  { numero: 2, nome: 'Conversas Cotidianas', emoji: '🗣️', descricao: 'Palavras mais usadas em libras', totalPerguntas: 5 },
+  { numero: 3, nome: 'Família', emoji: '👨‍👩‍👧‍👦', descricao: 'Sinais da família', totalPerguntas: 5 },
+  { numero: 4, nome: 'Alimentos', emoji: '🍎', descricao: 'Comidas e bebidas', totalPerguntas: 5 },
+  { numero: 5, nome: 'Lugares', emoji: '🏠', descricao: 'Lugares importantes', totalPerguntas: 5 }
+];
 
   constructor() {
     this.carregarProgresso();
@@ -161,23 +161,23 @@ export class SessionService {
     return progresso.get(nivel)?.pontuacao;
   }
 
-  public getNiveisComStatus() {
-    const progresso = this.progressoSubject.getValue();
+public getNiveisComStatus() {
+  const progresso = this.progressoSubject.getValue();
 
-    return this.NIVEIS_CONFIG.map(config => {
-      const progressoNivel = progresso.get(config.numero);
-      return {
-        ...config,
-        disponivel: progressoNivel?.desbloqueado || false,
-        completado: progressoNivel?.completado || false,
-        pontuacao: progressoNivel?.pontuacao,
-        tentativas: progressoNivel?.tentativas || 0,
-        dataCompletado: progressoNivel?.dataCompletado,
-        // Níveis 3-5 agora podem ser desbloqueados normalmente
-        emBreve: false // Removido a limitação
-      };
-    });
-  }
+  return this.NIVEIS_CONFIG.map(config => {
+    const progressoNivel = progresso.get(config.numero);
+    return {
+      ...config,
+      disponivel: progressoNivel?.desbloqueado || false,
+      completado: progressoNivel?.completado || false,
+      pontuacao: progressoNivel?.pontuacao,
+      tentativas: progressoNivel?.tentativas || 0,
+      dataCompletado: progressoNivel?.dataCompletado,
+      // ✅ ALTERAR ESTA LINHA: apenas níveis 4-5 ficam "em breve"
+      emBreve: config.numero > 3  // ← Era "false", agora só níveis 4+ são "em breve"
+    };
+  });
+}
 
   public getEstatisticas() {
     const progresso = this.progressoSubject.getValue();

@@ -65,11 +65,11 @@ export class QuizListComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.erro = '';
 
-    if (this.level > 2) {
-      this.erro = `Nível ${this.level} ainda não foi implementado neste MVP. Disponíveis: Níveis 1 e 2.`;
-      this.loading = false;
-      return;
-    }
+//     if (this.level > 2) {
+//       this.erro = `Nível ${this.level} ainda não foi implementado neste MVP. Disponíveis: Níveis 1 e 2.`;
+//       this.loading = false;
+//       return;
+//     }
 
     const url = `${this.API_BASE}/levels/${this.level}/questions`;
 
