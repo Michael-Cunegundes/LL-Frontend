@@ -7,6 +7,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Subject, takeUntil } from 'rxjs';
 import { QuestaoDTO, RespostaQuizDTO, ResultadoQuizDTO } from '../../models';
 import { SessionService } from '../../services/session.service';
+import { QuestaoDTO, RespostaQuizDTO, ResultadoQuizDTO, RespostaDetalhada } from '../../models';
 
 @Component({
   selector: 'quiz-list',
@@ -20,6 +21,8 @@ export class QuizListComponent implements OnInit, OnDestroy {
 
   perguntas: QuestaoDTO[] = [];
   respostas: RespostaQuizDTO[] = [];
+  respostasDetalhadas: RespostaDetalhada[] = [];
+  tempoInicioPergunta: number = 0;
   currentQuestionIndex = 0;
   selectedOption: number | null = null;
   level = 1;
@@ -65,12 +68,6 @@ export class QuizListComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.erro = '';
 
-//     if (this.level > 2) {
-//       this.erro = `Nível ${this.level} ainda não foi implementado neste MVP. Disponíveis: Níveis 1 e 2.`;
-//       this.loading = false;
-//       return;
-//     }
-
     const url = `${this.API_BASE}/levels/${this.level}/questions`;
 
     this.http.get<QuestaoDTO[]>(url).subscribe({
@@ -87,9 +84,13 @@ export class QuizListComponent implements OnInit, OnDestroy {
           opcaoEscolhida: null
         }));
 
+      this.respostasDetalhadas = [];
+      this.tempoInicioPergunta = Date.now();
+
         console.log(`Carregadas ${this.perguntas.length} perguntas do Nível ${this.level}`);
         this.loading = false;
       },
+
       error: (error: HttpErrorResponse) => {
         console.error('Erro ao carregar perguntas:', error);
 
@@ -124,7 +125,33 @@ export class QuizListComponent implements OnInit, OnDestroy {
     this.selectedOption = optionIndex;
     this.isAnswered = true;
     this.respostas[this.currentQuestionIndex].opcaoEscolhida = optionIndex;
+    this.salvarRespostaDetalhada(optionIndex);
   }
+
+private salvarRespostaDetalhada(opcaoEscolhida: number) {
+  const perguntaAtual = this.currentQuestion;
+  if (!perguntaAtual) return;
+
+  const tempoResposta = Date.now() - this.tempoInicioPergunta;
+  const acertou = opcaoEscolhida === perguntaAtual.indiceCorreto;
+
+  const indexExistente = this.respostasDetalhadas.findIndex(
+    r => r.pergunta.id === perguntaAtual.id
+  );
+
+  const respostaDetalhada: RespostaDetalhada = {
+    pergunta: perguntaAtual,
+    opcaoEscolhida,
+    acertou,
+    tempoResposta
+  };
+
+  if (indexExistente >= 0) {
+    this.respostasDetalhadas[indexExistente] = respostaDetalhada;
+  } else {
+    this.respostasDetalhadas.push(respostaDetalhada);
+  }
+}
 
   nextQuestion() {
     if (!this.isAnswered) return;
@@ -135,6 +162,7 @@ export class QuizListComponent implements OnInit, OnDestroy {
       this.currentQuestionIndex++;
       this.selectedOption = null;
       this.isAnswered = false;
+      this.tempoInicioPergunta = Date.now();
 
       const savedAnswer = this.respostas[this.currentQuestionIndex].opcaoEscolhida;
       if (savedAnswer !== null) {
@@ -181,6 +209,7 @@ getQuestionText(): string {
           state: {
             resultado,
             level: this.level,
+            respostasDetalhadas: this.respostasDetalhadas
             desbloqueouProximo: resultado.pontuacao >= 4 && this.level < 5
           }
         });
