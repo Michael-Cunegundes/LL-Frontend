@@ -1,13 +1,12 @@
-// Substitua completamente o conteúdo do seu quiz-list.component.ts
+// src/app/components/quiz-list/quiz-list.component.ts - CORRIGIDO
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Subject, takeUntil } from 'rxjs';
-import { QuestaoDTO, RespostaQuizDTO, ResultadoQuizDTO } from '../../models';
-import { SessionService } from '../../services/session.service';
 import { QuestaoDTO, RespostaQuizDTO, ResultadoQuizDTO, RespostaDetalhada } from '../../models';
+import { SessionService } from '../../services/session.service';
 
 @Component({
   selector: 'quiz-list',
@@ -84,8 +83,8 @@ export class QuizListComponent implements OnInit, OnDestroy {
           opcaoEscolhida: null
         }));
 
-      this.respostasDetalhadas = [];
-      this.tempoInicioPergunta = Date.now();
+        this.respostasDetalhadas = [];
+        this.tempoInicioPergunta = Date.now();
 
         console.log(`Carregadas ${this.perguntas.length} perguntas do Nível ${this.level}`);
         this.loading = false;
@@ -128,30 +127,30 @@ export class QuizListComponent implements OnInit, OnDestroy {
     this.salvarRespostaDetalhada(optionIndex);
   }
 
-private salvarRespostaDetalhada(opcaoEscolhida: number) {
-  const perguntaAtual = this.currentQuestion;
-  if (!perguntaAtual) return;
+  private salvarRespostaDetalhada(opcaoEscolhida: number) {
+    const perguntaAtual = this.currentQuestion;
+    if (!perguntaAtual) return;
 
-  const tempoResposta = Date.now() - this.tempoInicioPergunta;
-  const acertou = opcaoEscolhida === perguntaAtual.indiceCorreto;
+    const tempoResposta = Date.now() - this.tempoInicioPergunta;
+    const acertou = opcaoEscolhida === perguntaAtual.indiceCorreto;
 
-  const indexExistente = this.respostasDetalhadas.findIndex(
-    r => r.pergunta.id === perguntaAtual.id
-  );
+    const indexExistente = this.respostasDetalhadas.findIndex(
+      r => r.pergunta.id === perguntaAtual.id
+    );
 
-  const respostaDetalhada: RespostaDetalhada = {
-    pergunta: perguntaAtual,
-    opcaoEscolhida,
-    acertou,
-    tempoResposta
-  };
+    const respostaDetalhada: RespostaDetalhada = {
+      pergunta: perguntaAtual,
+      opcaoEscolhida,
+      acertou,
+      tempoResposta
+    };
 
-  if (indexExistente >= 0) {
-    this.respostasDetalhadas[indexExistente] = respostaDetalhada;
-  } else {
-    this.respostasDetalhadas.push(respostaDetalhada);
+    if (indexExistente >= 0) {
+      this.respostasDetalhadas[indexExistente] = respostaDetalhada;
+    } else {
+      this.respostasDetalhadas.push(respostaDetalhada);
+    }
   }
-}
 
   nextQuestion() {
     if (!this.isAnswered) return;
@@ -182,15 +181,15 @@ private salvarRespostaDetalhada(opcaoEscolhida: number) {
     }
   }
 
-getQuestionText(): string {
-  if (!this.currentQuestion) return '';
+  getQuestionText(): string {
+    if (!this.currentQuestion) return '';
 
-  if (this.currentQuestion.prompt.length > 1) {
-    return 'Qual o significado dessa sequência de sinais?';
-  } else {
-    return 'Qual o significado deste sinal?';
+    if (this.currentQuestion.prompt.length > 1) {
+      return 'Qual o significado dessa sequência de sinais?';
+    } else {
+      return 'Qual o significado deste sinal?';
+    }
   }
-}
 
   submitQuiz() {
     this.loading = true;
@@ -209,7 +208,7 @@ getQuestionText(): string {
           state: {
             resultado,
             level: this.level,
-            respostasDetalhadas: this.respostasDetalhadas
+            respostasDetalhadas: this.respostasDetalhadas,
             desbloqueouProximo: resultado.pontuacao >= 4 && this.level < 5
           }
         });
