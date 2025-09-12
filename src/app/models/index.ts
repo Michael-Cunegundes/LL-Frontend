@@ -2,16 +2,15 @@
 export type TipoPergunta = 'IMAGEM_PARA_TEXTO' | 'TEXTO_PARA_IMAGEM';
 
 export interface OptionDTO {
-  texto?: string;      // quando a opção for texto
-  imagemUrl?: string;  // quando a opção for imagem
+  texto?: string;
+  imagemUrl?: string;
 }
 
-// ✅ Renomeado de PerguntaDTO para QuestaoDTO para alinhar com backend
 export interface QuestaoDTO {
   id: number;
   tipo: TipoPergunta;
-  prompt: string[];       // sempre um array
-  opcoes: OptionDTO[];    // lista de opções
+  prompt: string[];
+  opcoes: OptionDTO[];
   indiceCorreto: number;
 }
 
@@ -20,8 +19,15 @@ export interface RespostaQuizDTO {
   opcaoEscolhida: number | null;
 }
 
-// ✅ Corrigido: backend retorna 'pontuacao', não 'acertos'
 export interface ResultadoQuizDTO {
-  pontuacao: number;  // ← Corrigido
+  pontuacao: number;
   mensagem: string;
+}
+
+// ✅ Interface para armazenar detalhes da resposta
+export interface RespostaDetalhada {
+  pergunta: QuestaoDTO;
+  opcaoEscolhida: number | null;
+  acertou: boolean;
+  tempoResposta?: number;
 }
