@@ -44,11 +44,7 @@ import { ResultadoQuizDTO, RespostaDetalhada } from '../../models';
 
           <p class="result-message">{{ resultado?.mensagem || 'Resultado não disponível' }}</p>
 
-          <!-- ✅ NOVO: Resumo Simples das Respostas -->
-          <div class="questions-summary" *ngIf="respostasDetalhadas && respostasDetalhadas.length > 0">
-            <div class="summary-header">
-              <h3>📝 Resumo das Respostas</h3>
-            </div>
+
 
             <!-- Mensagem personalizada -->
             <div class="summary-message">
@@ -63,80 +59,16 @@ import { ResultadoQuizDTO, RespostaDetalhada } from '../../models';
               </p>
             </div>
 
-            <!-- Grid visual das questões -->
-            <div class="questions-grid">
-              <div
-                *ngFor="let resposta of respostasDetalhadas; let i = index"
-                class="question-box"
-                [class.correct]="resposta.acertou"
-                [class.incorrect]="!resposta.acertou"
-                [title]="getTooltip(resposta, i)">
-                <span class="question-number">{{ i + 1 }}</span>
-                <span class="question-status">
-                  {{ resposta.acertou ? '✓' : '✗' }}
-                </span>
-              </div>
-            </div>
 
-            <!-- Legenda -->
-            <div class="legend">
-              <div class="legend-item">
-                <span class="legend-box correct"></span>
-                <span>Acertou</span>
-              </div>
-              <div class="legend-item">
-                <span class="legend-box incorrect"></span>
-                <span>Errou</span>
-              </div>
-            </div>
 
-            <!-- Gabarito opcional -->
-            <div class="gabarito-section" *ngIf="mostrarGabarito">
-              <h4>Gabarito:</h4>
-              <div class="gabarito-list">
-                <div *ngFor="let resposta of respostasDetalhadas; let i = index" class="gabarito-item">
-                  <span class="gabarito-number">{{ i + 1 }}.</span>
-                  <span class="gabarito-answer">{{ getRespostaCorretaSimples(resposta) }}</span>
-                </div>
-              </div>
-            </div>
 
-            <!-- Botão para mostrar/ocultar gabarito -->
-            <button
-              class="btn-gabarito"
-              (click)="mostrarGabarito = !mostrarGabarito">
-              {{ mostrarGabarito ? '🙈 Ocultar' : '👀 Ver' }} Gabarito
-            </button>
-          </div>
 
-          <div class="feedback" [ngClass]="feedbackClass">
-            <p>{{ feedback }}</p>
-          </div>
-        </div>
 
-        <!-- Estatísticas rápidas -->
-        <div class="stats-cards" *ngIf="respostasDetalhadas">
-          <div class="stat-card">
-            <div class="stat-icon">✅</div>
-            <div class="stat-value">{{ totalAcertos }}</div>
-            <div class="stat-label">Acertos</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">❌</div>
-            <div class="stat-value">{{ totalErros }}</div>
-            <div class="stat-label">Erros</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">📊</div>
-            <div class="stat-value">{{ pontuacaoPercentual }}%</div>
-            <div class="stat-label">Aproveitamento</div>
-          </div>
-          <div class="stat-card" *ngIf="tempoTotal">
-            <div class="stat-icon">⏱️</div>
-            <div class="stat-value">{{ formatarTempoTotal() }}</div>
-            <div class="stat-label">Tempo Total</div>
-          </div>
-        </div>
+
+
+
+
+
 
         <!-- Botões de ação -->
         <div class="action-buttons">
@@ -417,47 +349,7 @@ import { ResultadoQuizDTO, RespostaDetalhada } from '../../models';
       }
     }
 
-    .gabarito-section h4 {
-      color: #63b3ed;
-      margin: 0 0 15px 0;
-      font-size: 1rem;
-    }
 
-    .gabarito-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 10px;
-      text-align: left;
-    }
-
-    .gabarito-item {
-      display: flex;
-      gap: 8px;
-      color: #a0aec0;
-      font-size: 0.9rem;
-    }
-
-    .gabarito-number {
-      font-weight: 600;
-      color: #63b3ed;
-    }
-
-    .btn-gabarito {
-      background: #4a5568;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      margin-top: 15px;
-      font-size: 0.9rem;
-    }
-
-    .btn-gabarito:hover {
-      background: #718096;
-    }
 
     /* Feedback */
     .feedback {
