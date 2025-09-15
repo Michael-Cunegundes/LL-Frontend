@@ -28,13 +28,8 @@ interface NivelInfo {
         <div class="levels-section">
           <header class="app-header">
             <h1>LibraLingo</h1>
-            <p class="subtitle">MVP - Escolha seu nível:</p>
-            <div class="mvp-info">
-              <small>💡 Progresso resetado a cada sessão</small>
-              <button class="reset-btn" (click)="resetarProgresso()" title="Resetar progresso">
-                🔄 Resetar
-              </button>
-            </div>
+            <p class="subtitle">Escolha seu nível:</p>
+
           </header>
 
           <div class="levels-stack">
@@ -140,39 +135,38 @@ interface NivelInfo {
                   <span class="logo-hands">🤟</span>
                 </div>
                 <div class="logo-text">LibraLingo</div>
-                <div class="mvp-badge">MVP</div>
+
               </div>
             </div>
 
             <div class="hero-text">
               <h2>Aprenda LIBRAS</h2>
-              <p class="intro-text">
-                MVP com 2 níveis funcionais. Complete o Nível 1 com pelo menos 4 acertos
-                para desbloquear o Nível 2!
-              </p>
+            <p class="intro-text">
+              Descubra a linguagem de sinais brasileira de forma interativa.
+              Complete cada nível com 4+ acertos para desbloquear o próximo!
+            </p>
 
               <div class="benefits">
                 <div class="benefit">
-                  <span class="benefit-icon">📚</span>
-                  <span>2 níveis completos</span>
+                  <span class="benefit-icon"></span>
+                  <span>A Lei nº 10.436, de 24 de abril de 2002, reconhece a Língua Brasileira de Sinais (Libras) como meio legal de comunicação e expressão.</span>
                 </div>
                 <div class="benefit">
-                  <span class="benefit-icon">🔓</span>
-                  <span>Sistema de desbloqueio</span>
+                  <span class="benefit-icon"></span>
+                  <span>A falta de acesso a educação bilíngue (língua de sinais + língua oral/escrita local) prejudica aprendizado para surdos.
+
+                        Barreiras na saúde, atendimento público, comunicação cotidiana quando não há intérprete ou uso de língua de sinais.
+
+                        A maioria das pessoas ouvintes não sabe língua de sinais, o que aumenta isolamento.</span>
                 </div>
                 <div class="benefit">
-                  <span class="benefit-icon">📊</span>
-                  <span>Feedback imediato</span>
+
+                  <span>A língua de sinais não é universal. Cada país ou região costuma ter sua própria língua de sinais, com gramática, sinais, expressões faciais, regras próprias.</span>
                 </div>
                 <div class="benefit">
                   <span class="benefit-icon">⚡</span>
-                  <span>Progresso em memória</span>
+                  <span>A lei e seu decreto preveem que nos cursos de formação de professores, magistério (nível médio e superior) e fonoaudiologia seja incluído o ensino de Libras. Ou seja, quem vai formar profissionais que vão trabalhar com surdez ou educação especial deve aprender Libras.</span>
                 </div>
-              </div>
-
-              <div class="mvp-note">
-                <p><strong>Nota MVP:</strong> O progresso é resetado quando você sair do site.
-                Perfeito para testes e demonstrações rápidas!</p>
               </div>
             </div>
           </div>
@@ -221,22 +215,6 @@ interface NivelInfo {
       margin: 0;
       color: #A0AEC0;
       font-weight: 300;
-    }
-
-    .mvp-info {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      margin-top: 15px;
-      padding: 10px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .mvp-info small {
-      color: #A0AEC0;
-      flex: 1;
     }
 
     .reset-btn {
@@ -535,17 +513,6 @@ interface NivelInfo {
       letter-spacing: 1px;
     }
 
-    .mvp-badge {
-      background: #ed8936;
-      color: white;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
 
     .hero-text h2 {
       font-size: 2.5rem;
@@ -598,25 +565,6 @@ interface NivelInfo {
       opacity: 0.9;
     }
 
-    .mvp-note {
-      background: rgba(237, 137, 54, 0.1);
-      border: 1px solid rgba(237, 137, 54, 0.3);
-      border-radius: 8px;
-      padding: 15px;
-      text-align: left;
-    }
-
-    .mvp-note p {
-      margin: 0;
-      font-size: 0.9rem;
-      color: #FBB6CE;
-      line-height: 1.4;
-    }
-
-    .mvp-note strong {
-      color: #FED7E2;
-    }
-
     /* Responsividade */
     @media (max-width: 1024px) {
       .content-wrapper {
@@ -646,7 +594,7 @@ interface NivelInfo {
         font-size: 1.5rem;
       }
 
-      .mvp-info {
+      .-info {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
