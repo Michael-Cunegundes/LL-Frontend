@@ -3,10 +3,11 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, takeUntil } from 'rxjs';
 import { QuestaoDTO, RespostaQuizDTO, ResultadoQuizDTO, RespostaDetalhada } from '../../models';
 import { SessionService } from '../../services/session.service';
+import { QuizService } from '../../services/quiz.service';
 
 @Component({
   selector: 'quiz-list',
@@ -29,13 +30,11 @@ export class QuizListComponent implements OnInit, OnDestroy {
   erro = '';
   isAnswered = false;
 
-  private readonly API_BASE = 'http://localhost:8080/api/quiz';
-
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private http: HttpClient,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private quizService: QuizService
   ) {}
 
   ngOnInit() {
@@ -67,9 +66,7 @@ export class QuizListComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.erro = '';
 
-    const url = `${this.API_BASE}/levels/${this.level}/questions`;
-
-    this.http.get<QuestaoDTO[]>(url).subscribe({
+    this.quizService.getQuestoesPorNivel(this.level).subscribe({
       next: (questoes) => {
         if (!questoes || questoes.length === 0) {
           this.erro = `Nível ${this.level} não possui perguntas disponíveis.`;
@@ -194,7 +191,7 @@ export class QuizListComponent implements OnInit, OnDestroy {
   submitQuiz() {
     this.loading = true;
 
-    this.http.post<ResultadoQuizDTO>(`${this.API_BASE}/respostas`, this.respostas).subscribe({
+    this.quizService.submitRespostas(this.respostas).subscribe({
       next: (resultado) => {
         console.log(`Resultado recebido:`, resultado);
 

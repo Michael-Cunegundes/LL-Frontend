@@ -25,7 +25,16 @@
             "styles": ["src/styles.scss"]
           },
           "configurations": {
-            "production": { "optimization": true, "outputHashing": "all" },
+            "production": {
+              "optimization": true,
+              "outputHashing": "all",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ]
+            },
             "development": { "optimization": false, "sourceMap": true, "extractLicenses": false }
           },
           "defaultConfiguration": "development"

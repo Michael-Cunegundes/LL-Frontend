@@ -8,10 +8,11 @@ import {
   RespostaQuizDTO,
   ResultadoQuizDTO
 } from '../models';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class QuizService {
-  private baseUrl = '/api/quiz';
+  private readonly baseUrl = `${environment.apiBase}/quiz`;
 
   constructor(private http: HttpClient) {}
 
