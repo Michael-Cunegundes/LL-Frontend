@@ -174,7 +174,7 @@ public getNiveisComStatus() {
       tentativas: progressoNivel?.tentativas || 0,
       dataCompletado: progressoNivel?.dataCompletado,
       // ✅ ALTERAR ESTA LINHA: apenas níveis 4-5 ficam "em breve"
-      emBreve: config.numero > 5  // ← Era "false", agora só níveis 4+ são "em breve"
+      emBreve: config.numero >= 4  // ← Era "false", agora só níveis 4+ são "em breve"
     };
   });
 }
