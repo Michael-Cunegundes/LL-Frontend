@@ -594,7 +594,7 @@ interface NivelInfo {
         font-size: 1.5rem;
       }
 
-      .-info {
+      .level-info {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
