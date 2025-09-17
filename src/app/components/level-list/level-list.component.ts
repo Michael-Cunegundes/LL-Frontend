@@ -139,40 +139,69 @@ interface NivelInfo {
               </div>
             </div>
 
-            <div class="hero-text">
-              <h2>Aprenda LIBRAS</h2>
-            <p class="intro-text">
-              Descubra a linguagem de sinais brasileira de forma interativa.
-              Complete cada nível com 4+ acertos para desbloquear o próximo!
-            </p>
+<div class="hero-text">
+  <h2>Aprenda LIBRAS</h2>
+  <p class="intro-text">
+    Descubra a Língua Brasileira de Sinais de forma interativa.
+    Complete cada nível com 4+ acertos para desbloquear o próximo!
+  </p>
 
-              <div class="benefits">
-                <div class="benefit">
-                  <span class="benefit-icon"></span>
-                  <span>A Lei nº 10.436, de 24 de abril de 2002, reconhece a Língua Brasileira de Sinais (Libras) como meio legal de comunicação e expressão.</span>
-                </div>
-                <div class="benefit">
-                  <span class="benefit-icon"></span>
-                  <span>A falta de acesso a educação bilíngue (língua de sinais + língua oral/escrita local) prejudica aprendizado para surdos.
-
-                        Barreiras na saúde, atendimento público, comunicação cotidiana quando não há intérprete ou uso de língua de sinais.
-
-                        A maioria das pessoas ouvintes não sabe língua de sinais, o que aumenta isolamento.</span>
-                </div>
-                <div class="benefit">
-
-                  <span>A língua de sinais não é universal. Cada país ou região costuma ter sua própria língua de sinais, com gramática, sinais, expressões faciais, regras próprias.</span>
-                </div>
-                <div class="benefit">
-                  <span class="benefit-icon">⚡</span>
-                  <span>A lei e seu decreto preveem que nos cursos de formação de professores, magistério (nível médio e superior) e fonoaudiologia seja incluído o ensino de Libras. Ou seja, quem vai formar profissionais que vão trabalhar com surdez ou educação especial deve aprender Libras.</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+  <!-- Cards Informativos Expansíveis -->
+  <div class="info-cards">
+    <div class="info-card" [class.expanded]="expandedCard === 0" (click)="toggleCard(0)">
+      <div class="card-header">
+        <span class="card-icon">⚖️</span>
+        <span class="card-title">Legislação Brasileira</span>
+        <span class="card-arrow">{{ expandedCard === 0 ? '▼' : '▶' }}</span>
+      </div>
+      <div class="card-content">
+        A Lei nº 10.436/2002 reconhece a Libras como meio legal de comunicação e expressão.
+        O Decreto nº 5.626/2005 regulamenta esta lei, tornando obrigatório o ensino de Libras
+        em cursos de formação de professores e fonoaudiologia.
       </div>
     </div>
+
+    <div class="info-card" [class.expanded]="expandedCard === 1" (click)="toggleCard(1)">
+      <div class="card-header">
+        <span class="card-icon">🌍</span>
+        <span class="card-title">Libras no Mundo</span>
+        <span class="card-arrow">{{ expandedCard === 1 ? '▼' : '▶' }}</span>
+      </div>
+      <div class="card-content">
+        A língua de sinais não é universal. Cada país possui sua própria língua de sinais
+        com gramática, vocabulário e expressões culturais únicas. A Libras é específica
+        do Brasil e é diferente da ASL (americana) ou LSF (francesa).
+      </div>
+    </div>
+
+    <div class="info-card" [class.expanded]="expandedCard === 2" (click)="toggleCard(2)">
+      <div class="card-header">
+        <span class="card-icon">💬</span>
+        <span class="card-title">Importância Social</span>
+        <span class="card-arrow">{{ expandedCard === 2 ? '▼' : '▶' }}</span>
+      </div>
+      <div class="card-content">
+        Aprender Libras quebra barreiras de comunicação e promove a inclusão real
+        da comunidade surda. Permite acesso igualitário a serviços de saúde, educação
+        e participação plena na sociedade.
+      </div>
+    </div>
+
+    <div class="info-card" [class.expanded]="expandedCard === 3" (click)="toggleCard(3)">
+      <div class="card-header">
+        <span class="card-icon">📚</span>
+        <span class="card-title">Como Funciona o LibraLingo</span>
+        <span class="card-arrow">{{ expandedCard === 3 ? '▼' : '▶' }}</span>
+      </div>
+      <div class="card-content">
+        Oferecemos 25 exercícios práticos divididos em 5 níveis progressivos.
+        Use imagens ilustrativas para aprender sinais, receba feedback instantâneo
+        e acompanhe seu progresso. Complete cada nível com 80% de acertos para avançar!
+      </div>
+    </div>
+  </div>
+</div>
+
   `,
   styles: [`
     /* Estilos base mantidos do componente anterior */
@@ -594,11 +623,102 @@ interface NivelInfo {
         font-size: 1.5rem;
       }
 
-      .-info {
+      .level-info {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
       }
+
+    /* Cards Informativos Expansíveis */
+    .info-cards {
+      display: grid;
+      gap: 10px;
+      margin-top: 25px;
+    }
+
+    .info-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .info-card:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(49, 130, 206, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .info-card.expanded {
+      background: rgba(49, 130, 206, 0.1);
+      border-color: rgba(49, 130, 206, 0.4);
+    }
+
+    .card-header {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      user-select: none;
+    }
+
+    .card-icon {
+      font-size: 1.3rem;
+      min-width: 28px;
+      text-align: center;
+    }
+
+    .card-title {
+      flex: 1;
+      font-weight: 500;
+      color: #E2E8F0;
+      font-size: 0.95rem;
+    }
+
+    .card-arrow {
+      color: #63B3ED;
+      font-size: 0.8rem;
+      transition: transform 0.3s ease;
+    }
+
+    .card-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      padding: 0 18px;
+      color: #A0AEC0;
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+
+    .info-card.expanded .card-content {
+      max-height: 200px;
+      padding: 0 18px 16px 46px;
+    }
+
+    /* Animação suave para o arrow */
+    .info-card.expanded .card-arrow {
+      color: #63B3ED;
+    }
+
+    /* Responsividade para os cards */
+    @media (max-width: 768px) {
+      .info-cards {
+        gap: 8px;
+      }
+
+
+
+      .card-header {
+        padding: 12px 14px;
+      }
+
+      .card-content {
+        font-size: 0.82rem;
+      }
+    }
     }
   `]
 })
@@ -625,6 +745,21 @@ export class LevelListComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+
+
+
+
+
+  public toggleCard(index: number): void {
+    if (this.expandedCard === index) {
+      this.expandedCard = null; // Fecha se já estiver aberto
+    } else {
+      this.expandedCard = index; // Abre o card clicado
+    }
+  }
+
+
 
   private atualizarDados(): void {
     this.niveis = this.sessionService.getNiveisComStatus();
