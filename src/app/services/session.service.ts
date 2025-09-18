@@ -173,8 +173,8 @@ public getNiveisComStatus() {
       pontuacao: progressoNivel?.pontuacao,
       tentativas: progressoNivel?.tentativas || 0,
       dataCompletado: progressoNivel?.dataCompletado,
-      // ✅ ALTERAR ESTA LINHA: apenas níveis 4-5 ficam "em breve"
-      emBreve: config.numero >= 4
+
+
     };
   });
 }

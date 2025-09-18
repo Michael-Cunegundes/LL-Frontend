@@ -38,15 +38,11 @@ interface NivelInfo {
                  [class.available]="nivel.disponivel && !nivel.emBreve"
                  [class.locked]="!nivel.disponivel || nivel.emBreve"
                  [class.completed]="nivel.completado"
-                 [class.em-breve]="nivel.emBreve"
                  [style.animation-delay]="(i * 0.1) + 's'">
 
               <div class="level-content">
                 <!-- Ícone do nível -->
                 <div class="level-icon">
-                  <span *ngIf="nivel.disponivel && !nivel.emBreve">{{ nivel.emoji }}</span>
-                  <span *ngIf="!nivel.disponivel && !nivel.emBreve">🔒</span>
-                  <span *ngIf="nivel.emBreve">⏳</span>
                 </div>
 
                 <!-- Informações do nível -->
@@ -70,9 +66,6 @@ interface NivelInfo {
                       <span>Complete o nível anterior com 4+ acertos</span>
                     </div>
 
-                    <div *ngIf="nivel.emBreve" class="coming-soon-message">
-                      <span>Em desenvolvimento</span>
-                    </div>
                   </div>
                 </div>
 
@@ -94,12 +87,6 @@ interface NivelInfo {
                     Bloqueado
                   </button>
 
-                  <button
-                    *ngIf="nivel.emBreve"
-                    class="coming-soon-btn"
-                    disabled>
-                    Em breve
-                  </button>
                 </div>
               </div>
             </div>
@@ -305,14 +292,6 @@ interface NivelInfo {
       color: #48bb78;
       font-size: 1.2rem;
       font-weight: bold;
-    }
-
-    /* ✅ Estilo para níveis "em breve" */
-    .level-item.em-breve {
-      opacity: 0.6;
-      background: #1a202c;
-      border-style: dashed;
-      border-color: #4a5568;
     }
 
     @keyframes slideInLeft {
@@ -727,6 +706,8 @@ export class LevelListComponent implements OnInit, OnDestroy {
 
   niveis: NivelInfo[] = [];
   estatisticas: any = null;
+
+  expandedCard: number | null = null;
 
   constructor(private sessionService: SessionService) {}
 
